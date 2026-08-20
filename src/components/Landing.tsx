@@ -20,10 +20,21 @@ function CoordsBackground() {
     { deg: 1, top: '57%' },
     { deg: 7.6, top: '61%' },
   ]
-  const circles = [
-    { r: 322, tx: -150, ty: -12 },
-    { r: 286, tx: 146, ty: 22 },
+    { r: 240, tx: -150, ty: -12, sides: 6 },
+    { r: 200, tx: 146, ty: 22, sides: 6 },
   ]
+  
+  // A helper to draw a hexagon path instead of a circle
+  const hexagonPath = (r: number) => {
+    let path = ''
+    for (let i = 0; i < 6; i++) {
+      const angle = (i * Math.PI) / 3
+      const x = 500 + r * Math.cos(angle)
+      const y = 500 + r * Math.sin(angle)
+      path += (i === 0 ? 'M' : 'L') + x + ' ' + y
+    }
+    return path + ' Z'
+  }
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
       <svg
@@ -34,13 +45,11 @@ function CoordsBackground() {
         aria-hidden
       >
         {circles.map((c, i) => (
-          <circle
+          <path
             key={i}
-            cx="500"
-            cy="500"
-            r={c.r}
+            d={hexagonPath(c.r)}
             stroke="var(--coord-circle)"
-            strokeWidth="1.1"
+            strokeWidth="1.5"
             transform={`translate(${c.tx} ${c.ty})`}
           />
         ))}
@@ -54,18 +63,18 @@ function CoordsBackground() {
         />
       ))}
 
-      <ul className="absolute inset-0 font-mono text-[10px] uppercase tracking-[0.14em] text-[#efe9dc]/55">
+      <ul className="absolute inset-0 font-mono text-[10px] uppercase tracking-[0.14em] text-mist-200/55">
         <li className="absolute left-[5%] top-[45%]">
-          <span className="block text-[#efe9dc]/80">Testnet</span>
+          <span className="block text-mist-200/80">Testnet</span>
           <span className="block">[ Starknet · STRK20 ]</span>
         </li>
         <li className="absolute right-[5%] top-[38%] text-right">
-          <span className="block text-[#efe9dc]/80">Proof</span>
-          <span className="block">[ Groth16 · BN254 ]</span>
+          <span className="block text-mist-200/80">Proof</span>
+          <span className="block">[ Cairo · STARK ]</span>
         </li>
         <li className="absolute bottom-[16%] left-1/2 -translate-x-1/2 text-center">
-          <span className="block text-[#efe9dc]/80">Shielded</span>
-          <span className="block">[ Poseidon · Merkle ]</span>
+          <span className="block text-mist-200/80">Shielded</span>
+          <span className="block">[ Pedersen · Merkle ]</span>
         </li>
       </ul>
     </div>
@@ -87,8 +96,8 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
     const update = () => {
       raf = 0
       const p = Math.min(1, Math.max(0, window.scrollY / (window.innerHeight * 0.6)))
-      el.style.setProperty('--coord-line', `rgba(${lerp(255, 20, p)},${lerp(255, 16, p)},${lerp(255, 9, p)},0.62)`)
-      el.style.setProperty('--coord-circle', `rgba(${lerp(239, 20, p)},${lerp(233, 16, p)},${lerp(220, 9, p)},${(0.24 + 0.26 * p).toFixed(3)})`)
+      el.style.setProperty('--coord-line', `rgba(${lerp(255, 99, p)},${lerp(255, 102, p)},${lerp(255, 241, p)},0.62)`)
+      el.style.setProperty('--coord-circle', `rgba(${lerp(224, 99, p)},${lerp(231, 102, p)},${lerp(255, 241, p)},${(0.24 + 0.26 * p).toFixed(3)})`)
     }
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update)
@@ -102,7 +111,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
   }, [])
 
   return (
-    <div className="relative w-full bg-[#211b12] text-[#efe9dc]">
+    <div className="relative w-full bg-[#0A0910] text-[#E0E7FF]">
       <section
         ref={heroRef}
         className="relative min-h-screen w-full overflow-hidden"
@@ -112,7 +121,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           Grain is a separate static overlay; the field's own alpha bleeds the
           bottom edge into the footer cream. */}
       <div className="absolute inset-0">
-        <FluidVolume background="#f4efe4" quality="high" />
+        <FluidVolume background="#0A0910" baseColor="#3730A3" quality="high" />
       </div>
 
       {/* Static film grain — fixed noise, does not shimmer. */}
@@ -131,23 +140,23 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
       {/* Keep the upper half a touch darker for the white type. */}
       <div
         className="pointer-events-none absolute inset-0"
-        style={{ background: 'linear-gradient(to bottom, rgba(20,16,9,0.55), rgba(20,16,9,0.12) 42%, transparent 70%)' }}
+        style={{ background: 'linear-gradient(to bottom, rgba(10,9,16,0.55), rgba(10,9,16,0.12) 42%, transparent 70%)' }}
       />
 
       {/* Header — fixed, inverts against whatever scrolls behind it. */}
-      <header className="fixed inset-x-0 top-0 z-50 mix-blend-difference">
+      <header className="fixed inset-x-0 top-0 z-50">
         <div className="flex items-center justify-between px-8 py-5">
           <a href="#/" className="flex items-center gap-2.5">
             <img src={markUrl} alt="Mirage" className="h-7 w-auto" />
-            <span className="font-display text-sm font-semibold tracking-tight">
-              mirage <span className="align-super font-mono text-[10px] tracking-[0.2em] text-[#efe9dc]/60">ZK</span>
+            <span className="font-display text-sm font-semibold tracking-tight text-white">
+              mirage <span className="align-super font-mono text-[10px] tracking-[0.2em] text-[#E0E7FF]/60">ZK</span>
             </span>
           </a>
           <nav className="flex items-center gap-8 font-mono text-[11px] uppercase tracking-[0.18em]">
-            <a href="#/faucet" className="text-[#efe9dc]/70 transition hover:text-[#efe9dc]">
+            <a href="#/faucet" className="text-[#E0E7FF]/70 transition hover:text-[#E0E7FF]">
               Faucet
             </a>
-            <button onClick={onEnter} className="text-[#efe9dc]/70 transition hover:text-[#efe9dc]">
+            <button onClick={onEnter} className="text-[#E0E7FF]/70 transition hover:text-[#E0E7FF]">
               Enter →
             </button>
           </nav>
@@ -157,8 +166,8 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
       {/* Hero — two fixed word-lines + one rotating, scrambling line. */}
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6">
         <h1
-          className="text-center font-display font-medium uppercase leading-[0.98] tracking-[-0.04em] text-[#f6f1e6]"
-          style={{ fontSize: 'clamp(2.6rem, 7.4vw, 5.75rem)', textShadow: '0 2px 30px rgba(20,16,9,0.45)' }}
+          className="text-center font-display font-medium uppercase leading-[0.98] tracking-[-0.04em] text-[#E0E7FF]"
+          style={{ fontSize: 'clamp(2.6rem, 7.4vw, 5.75rem)', textShadow: '0 2px 30px rgba(10,9,16,0.65)' }}
         >
           <span className="flex flex-wrap justify-center gap-x-[0.26em]">
             <Word>private</Word>
@@ -168,12 +177,12 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
             <Word>that</Word>
             <Word>stays</Word>
           </span>
-          <span className="block">
+          <span className="block text-mist-300">
             <ScrambleCycle words={ROTATING} duration={900} hold={2000} />
           </span>
         </h1>
 
-        <span className="mt-10 font-mono text-[11px] uppercase tracking-[0.3em] text-[#efe9dc]/55">scroll</span>
+        <span className="mt-10 font-mono text-[11px] uppercase tracking-[0.3em] text-[#E0E7FF]/55">scroll</span>
       </div>
 
       {/* Clean seam into the footer: a long, gradual cream wash over the bottom
@@ -184,14 +193,14 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-[32rem]"
         style={{
           background:
-            'linear-gradient(to bottom, rgba(244,239,228,0) 0%, rgba(244,239,228,0) 44%, rgba(244,239,228,0.28) 64%, rgba(244,239,228,0.62) 80%, rgba(244,239,228,0.9) 92%, #f4efe4 100%)',
+            'linear-gradient(to bottom, rgba(10,9,16,0) 0%, rgba(10,9,16,0) 44%, rgba(10,9,16,0.28) 64%, rgba(10,9,16,0.62) 80%, rgba(10,9,16,0.9) 92%, #0A0910 100%)',
         }}
       />
       </section>
 
       <StoryShielded onEnter={onEnter} />
 
-      <footer className="relative flex min-h-screen flex-col justify-between overflow-hidden bg-[#f4efe4] px-8 py-16 text-[#1b1610]">
+      <footer className="relative flex min-h-screen flex-col justify-between overflow-hidden bg-[#0A0910] px-8 py-16 text-mist-200">
         <div
           className="pointer-events-none absolute inset-0 opacity-50"
           style={{
@@ -205,60 +214,60 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           <p className="max-w-xs text-[15px] font-medium leading-snug">
             Feel free to reach out if you want private money on Starknet — or simply have a chat.
           </p>
-          <img src={markUrl} alt="Mirage" className="h-11 w-auto opacity-80" style={{ filter: 'brightness(0)' }} />
+          <img src={markUrl} alt="Mirage" className="h-11 w-auto opacity-80" />
         </div>
 
         <div className="relative">
           <a
             href="mailto:hello@mirage.starknet"
-            className="block font-display font-light uppercase leading-none tracking-[-0.02em] text-[#b3a081] transition-colors hover:text-[#4f3e22]"
+            className="block font-display font-light uppercase leading-none tracking-[-0.02em] text-mist-300 transition-colors hover:text-mist-100"
             style={{ fontSize: 'clamp(2rem, 8.2vw, 6.5rem)' }}
           >
             hello@mirage.starknet
           </a>
-          <div className="mt-6 h-px w-full bg-[#1b1610]/20" />
+          <div className="mt-6 h-px w-full bg-mist-800/60" />
         </div>
 
         <div className="relative">
           <div className="flex flex-col gap-12 md:flex-row md:items-end md:justify-between">
-            <nav className="flex gap-6 font-mono text-[13px] uppercase tracking-[0.14em] text-[#1b1610]/70">
-              <a href="#" className="transition hover:text-[#1b1610]">X</a>
-              <a href="#" className="transition hover:text-[#1b1610]">GitHub</a>
-              <a href="#" className="transition hover:text-[#1b1610]">Discord</a>
+            <nav className="flex gap-6 font-mono text-[13px] uppercase tracking-[0.14em] text-mist-400">
+              <a href="#" className="transition hover:text-mist-200">X</a>
+              <a href="#" className="transition hover:text-mist-200">GitHub</a>
+              <a href="#" className="transition hover:text-mist-200">Discord</a>
             </nav>
 
             <div className="grid max-w-2xl grid-cols-1 gap-10 sm:grid-cols-2">
               <div className="max-w-[15rem]">
                 <div className="mb-4 flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.16em]">
                   <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden>
-                    <circle cx="6.5" cy="6.5" r="6" stroke="currentColor" />
+                    <polygon points="6.5,0.5 12,3.5 12,9.5 6.5,12.5 1,9.5 1,3.5" stroke="currentColor" />
                   </svg>
                   Open source
                 </div>
-                <p className="text-[13px] leading-relaxed text-[#1b1610]/70">
+                <p className="text-[13px] leading-relaxed text-mist-400">
                   Mirage is open source and community-run. We're always looking for cryptographers, Cairo engineers and designers. Reach out with what you'd build.
                 </p>
               </div>
               <div className="max-w-[15rem]">
                 <div className="mb-4 flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.16em]">
                   <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden>
-                    <circle cx="5" cy="6.5" r="4.5" stroke="currentColor" />
-                    <circle cx="8" cy="6.5" r="4.5" stroke="currentColor" />
+                    <rect x="2" y="2" width="9" height="9" stroke="currentColor" />
+                    <circle cx="6.5" cy="6.5" r="2" stroke="currentColor" />
                   </svg>
                   Security
                 </div>
-                <p className="text-[13px] leading-relaxed text-[#1b1610]/70">
+                <p className="text-[13px] leading-relaxed text-mist-400">
                   Found a vulnerability in the circuits or contracts? Disclose it responsibly at security@mirage.starknet — privacy protects everyone.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="mt-14 flex items-center justify-between border-t border-[#1b1610]/12 pt-6 font-mono text-[11px] uppercase tracking-[0.14em] text-[#1b1610]/50">
+          <div className="mt-14 flex items-center justify-between border-t border-mist-800/60 pt-6 font-mono text-[11px] uppercase tracking-[0.14em] text-mist-500">
             <span>© Mirage 2026</span>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="transition hover:text-[#1b1610]"
+              className="transition hover:text-mist-300"
             >
               Top ↑
             </button>
