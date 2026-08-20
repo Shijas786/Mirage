@@ -1,0 +1,11 @@
+export const bridge = {};
+export const BRIDGE_TOKENS = [];
+export const commitmentHex = () => '0x0';
+export const createBridgeNote = () => ({});
+export type LightClientHead = any;
+export const lockOnL1 = () => ({});
+export const readIsBridged = () => false;
+export const readLightClientHead = () => ({});
+export const requestBridgeIn = () => ({});
+export const sepoliaTxUrl = () => '';
+export const stellarContractUrl = () => '';
