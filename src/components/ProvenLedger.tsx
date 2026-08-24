@@ -19,7 +19,7 @@ function clock(ts: number): string {
 export function ProvenLedger() {
   const entries = loadNotes()
     .slice()
-    .sort((a, b) => b.createdAt - a.createdAt)
+    .sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0))
     .slice(0, 4)
 
   if (entries.length === 0) return null
@@ -29,13 +29,13 @@ export function ProvenLedger() {
       {entries.map((n) => {
         const proven = Boolean(n.txHash)
         return (
-          <li key={n.commitment} className="coord-label flex items-center gap-2 normal-case tracking-normal">
-            <span className="tabular-nums text-spectral/45">{clock(n.createdAt)}</span>
-            <span className="uppercase tracking-[0.14em] text-zinc-400">{VERB[n.source ?? 'received']}</span>
-            <span className={proven ? 'text-emerald-400/80' : 'text-emerald-400/45'}>
-              {proven ? '✓ proven' : '· sealed'}
+          <li key={n.commitment} className="coord-label flex items-center gap-2 rounded-full border border-ink-800 bg-ink-900/60 px-3 py-1 normal-case tracking-normal backdrop-blur-md">
+            <span className="tabular-nums text-mist-400/60">{clock(n.createdAt ?? 0)}</span>
+            <span className="uppercase tracking-[0.14em] text-zinc-300 font-medium">{VERB[n.source ?? 'received']}</span>
+            <span className={proven ? 'text-emerald-400 font-semibold' : 'text-mist-400/60'}>
+              {proven ? '✓ STARK verified' : '· sealed note'}
             </span>
-            {proven && <span className="tabular-nums text-spectral/40">{truncateKey(n.txHash!, 4, 4)}</span>}
+            {proven && <span className="font-mono text-[10px] text-mist-400/80">{truncateKey(n.txHash!, 4, 4)}</span>}
           </li>
         )
       })}

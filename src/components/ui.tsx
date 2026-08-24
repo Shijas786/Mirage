@@ -202,14 +202,15 @@ export function Select({ options, className, ...rest }: SelectProps) {
   )
 }
 
-type BadgeTone = 'neutral' | 'accent' | 'success' | 'warn' | 'danger'
+type BadgeTone = 'neutral' | 'accent' | 'success' | 'warn' | 'danger' | 'coral'
 
 const BADGE_TONE: Record<BadgeTone, string> = {
-  neutral: 'bg-ink-700/60 text-zinc-300',
-  accent: 'bg-spectral/15 text-spectral-soft',
-  success: 'bg-patina-500/15 text-patina-300',
-  warn: 'bg-amber-500/15 text-amber-300',
-  danger: 'bg-red-500/15 text-red-300',
+  neutral: 'bg-ink-800 text-zinc-300 border border-ink-750',
+  accent: 'bg-mist-600/20 text-mist-300 border border-mist-500/30',
+  coral: 'bg-[#EC796B]/15 text-[#FFA194] border border-[#EC796B]/30',
+  success: 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30',
+  warn: 'bg-amber-500/15 text-amber-300 border border-amber-500/30',
+  danger: 'bg-red-500/15 text-red-300 border border-red-500/30',
 }
 
 export function Badge({
@@ -274,7 +275,7 @@ export function ToggleGroup<T extends string>({
   options: ToggleOption<T>[]
 }) {
   return (
-    <div className="grid grid-cols-2 gap-1 rounded-xl border border-ink-700 bg-ink-900/60 p-1">
+    <div className="grid grid-cols-2 gap-1 rounded-xl border border-ink-750 bg-ink-950/80 p-1">
       {options.map((option) => {
         const active = value === option.value
         return (
@@ -286,7 +287,7 @@ export function ToggleGroup<T extends string>({
               'rounded-lg py-2 text-sm font-semibold transition',
               active
                 ? (option.activeClassName ??
-                    'bg-spectral/15 text-zinc-100 shadow-[inset_0_0_0_1px_rgba(214,192,131,0.4)]')
+                    'bg-mist-600/30 text-zinc-100 shadow-[inset_0_0_0_1px_rgba(99,102,241,0.5)]')
                 : 'text-zinc-400 hover:text-zinc-200',
             )}
           >

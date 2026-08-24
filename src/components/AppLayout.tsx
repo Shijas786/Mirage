@@ -7,6 +7,7 @@ import { cx } from '../lib/cx'
 import { BrandCanvas } from './BrandCanvas'
 import { ConnectWallet } from './ConnectWallet'
 import { EyeGlyph, MirageMark } from './ui'
+import { StarknetGlyph } from './BrandIcons'
 import { ScrambleNumber } from './ScrambleNumber'
 
 const NAV = [
@@ -23,14 +24,14 @@ function ShieldedChip() {
   if (loadingBalances || balances.length === 0) return null
   const total = balances.reduce((sum, b) => sum + b.usdEstimate, 0)
   return (
-    <div className="hidden items-center gap-2 md:flex">
-      <span className="coord-label">shielded</span>
-      <ScrambleNumber value={formatUsd(total)} revealed={revealed} className="font-mono text-sm text-[#f6f1e6]" />
+    <div className="hidden items-center gap-2 rounded-xl border border-ink-800 bg-ink-900/60 px-3 py-1.5 backdrop-blur-md md:flex">
+      <span className="coord-label text-mist-400">shielded</span>
+      <ScrambleNumber value={formatUsd(total)} revealed={revealed} className="font-mono text-sm text-zinc-100" />
       <button
         type="button"
         onClick={toggle}
         aria-label={revealed ? 'Hide balance' : 'Reveal balance'}
-        className="text-spectral/50 transition hover:text-spectral"
+        className="text-mist-400/70 transition hover:text-mist-300"
       >
         <EyeGlyph off={!revealed} className="h-4 w-4" />
       </button>
@@ -40,28 +41,44 @@ function ShieldedChip() {
 
 function AppNav() {
   return (
-    <header className="sticky top-0 z-40 border-b border-[#efe9dc]/8 bg-[#1c1710]/40 backdrop-blur-md">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-3">
-        <NavLink to="/app" className="flex items-center gap-2">
-          <MirageMark className="h-5 w-5 text-spectral" />
-          <span className="font-display text-sm font-semibold tracking-tight text-[#f6f1e6]">
-            mirage <sup className="align-super font-mono text-[9px] tracking-[0.2em] text-spectral/60">ZK</sup>
-          </span>
+    <header className="sticky top-0 z-40 border-b border-ink-800/80 bg-ink-950/75 backdrop-blur-xl">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-3.5">
+        <NavLink to="/app" className="group flex items-center gap-2.5">
+          <div className="relative flex h-8 w-8 items-center justify-center rounded-xl border border-ink-750 bg-ink-900/90 shadow-[0_0_15px_rgba(99,102,241,0.2)] transition group-hover:border-mist-500/50 group-hover:shadow-[0_0_20px_rgba(99,102,241,0.35)]">
+            <MirageMark className="h-4 w-4 text-mist-300 transition group-hover:text-white" />
+            <span className="absolute -bottom-0.5 -right-0.5 flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mist-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-mist-500" />
+            </span>
+          </div>
+          <div className="flex flex-col">
+            <span className="font-display text-sm font-semibold tracking-tight text-zinc-100 transition group-hover:text-white">
+              mirage <sup className="align-super font-mono text-[9px] tracking-[0.2em] text-mist-400">ZK</sup>
+            </span>
+            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-mist-400/60">Starknet L2</span>
+          </div>
         </NavLink>
-        <nav className="hidden items-center gap-5 font-mono text-[10px] uppercase tracking-[0.16em] md:flex">
+
+        <nav className="hidden items-center gap-1 rounded-full border border-ink-800/80 bg-ink-900/70 p-1 font-mono text-[11px] uppercase tracking-[0.14em] backdrop-blur-md md:flex">
           {NAV.map(([label, to]) => (
             <NavLink
               key={to}
               to={to}
               className={({ isActive }) =>
-                cx('transition hover:text-[#f6f1e6]', isActive ? 'text-[#f6f1e6]' : 'text-spectral/70')
+                cx(
+                  'rounded-full px-3.5 py-1.5 transition',
+                  isActive
+                    ? 'bg-mist-600/30 text-zinc-100 shadow-[inset_0_0_0_1px_rgba(99,102,241,0.4)]'
+                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-ink-800/40',
+                )
               }
             >
               {label}
             </NavLink>
           ))}
         </nav>
-        <div className="flex items-center gap-4">
+
+        <div className="flex items-center gap-3">
           <ShieldedChip />
           <ConnectWallet />
         </div>
@@ -81,58 +98,66 @@ function AppFooter() {
     await refreshBalances()
   }
   return (
-    <footer className="cream-panel relative mt-auto">
-      {/* Grain eases in over the top edge so it settles into the wash above
-          instead of popping at the boundary. */}
+    <footer className="relative mt-auto border-t border-ink-800/80 bg-[#07070E] text-zinc-300">
       <div
         aria-hidden
-        className="mi-grain absolute inset-0 opacity-40"
-        style={{
-          WebkitMaskImage: 'linear-gradient(to bottom, transparent, #000 4rem)',
-          maskImage: 'linear-gradient(to bottom, transparent, #000 4rem)',
-        }}
+        className="mi-grain pointer-events-none absolute inset-0 opacity-20"
       />
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-5 px-8 py-8 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <MirageMark className="h-7 w-7 shrink-0" style={{ filter: 'brightness(0)', opacity: 0.85 }} />
-          <p className="max-w-[18rem] text-[12.5px] font-normal leading-relaxed text-[#1b1610]/70">
-            Private money on Starknet. Bridge in, hold, pay and trade — proven on-chain, never revealed.
-          </p>
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-ink-750 bg-ink-900 text-mist-400">
+            <StarknetGlyph className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-display text-sm font-semibold tracking-tight text-zinc-100">Mirage Protocol</span>
+              <span className="rounded bg-mist-600/20 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-mist-300">
+                Cairo 2.x STARK
+              </span>
+            </div>
+            <p className="mt-0.5 max-w-[22rem] text-xs leading-relaxed text-zinc-400">
+              Confidential, unlinkable money on Starknet. Proven with STARK curves — zero knowledge revealed.
+            </p>
+          </div>
         </div>
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-[0.16em] text-[#1b1610]/55">
-          <NavLink to="/faucet" className="transition hover:text-[#1b1610]">
+
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-[0.16em] text-zinc-400">
+          <NavLink to="/faucet" className="transition hover:text-mist-300">
             Faucet
           </NavLink>
-          <button type="button" onClick={() => void clearLocalData()} className="uppercase transition hover:text-[#1b1610]">
-            Clear data
+          <a
+            href="https://sepolia.voyager.online"
+            target="_blank"
+            rel="noreferrer"
+            className="transition hover:text-mist-300"
+          >
+            Explorer ↗
+          </a>
+          <button type="button" onClick={() => void clearLocalData()} className="uppercase transition hover:text-mist-300">
+            Clear cache
           </button>
-          <span className="text-[#1b1610]/45">© Mirage 2026</span>
+          <span className="text-zinc-500">© Mirage 2026</span>
         </div>
       </div>
     </footer>
   )
 }
 
-/** Persistent app shell: the BrandCanvas world, router nav and cream footer wrap
- *  every routed surface (hub, bridge, pay, swap, receive, faucet). */
+/** Persistent app shell: the BrandCanvas world, router nav and Starknet cosmic footer */
 export function AppLayout() {
   return (
-    <div className="relative flex min-h-screen flex-col">
+    <div className="relative flex min-h-screen flex-col bg-[#07070E]">
       <BrandCanvas />
       <AppNav />
       <main className="relative flex-1">
         <Outlet />
       </main>
-      {/* Long, eased cream wash so the fixed dark canvas dissolves into the footer
-          over a tall multi-stop ramp — the section change reads as one surface.
-          No grain of its own: the fixed canvas grain shows through the transparent
-          top and is naturally covered as the wash turns opaque. */}
+      {/* Deep space cosmic transition to footer */}
       <div
         aria-hidden
-        className="pointer-events-none relative h-[30rem]"
+        className="pointer-events-none relative h-24"
         style={{
-          background:
-            'linear-gradient(to bottom, rgba(244,239,228,0) 0%, rgba(244,239,228,0) 20%, rgba(244,239,228,0.14) 42%, rgba(244,239,228,0.42) 62%, rgba(244,239,228,0.74) 78%, rgba(244,239,228,0.93) 91%, #f4efe4 100%)',
+          background: 'linear-gradient(to bottom, transparent, rgba(7,7,14,0.95))',
         }}
       />
       <AppFooter />

@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react'
 
-const CARD = 'relative rounded-[1.75rem] border border-mist-800/60 px-6 py-10 sm:px-10 sm:py-12'
-const CARD_BG: CSSProperties = { background: 'rgba(35,34,62,0.45)', backdropFilter: 'blur(12px)' }
+const CARD = 'relative rounded-[1.75rem] border border-ink-800/80 px-6 py-10 sm:px-10 sm:py-12 shadow-[0_4px_30px_rgba(0,0,0,0.5)]'
+const CARD_BG: CSSProperties = { background: 'rgba(17,18,36,0.7)', backdropFilter: 'blur(16px)' }
 
 const BEATS = [
   {
@@ -167,12 +167,12 @@ export function StoryShielded({ onEnter }: { onEnter: () => void }) {
 
         {/* modules + CTA — one card */}
         <div className={`mt-8 ${CARD}`} style={CARD_BG}>
-          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[1rem] border border-mist-800/60 bg-mist-800/60 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[1rem] border border-ink-800 bg-ink-800 sm:grid-cols-4">
             {MODULES.map((m) => (
-              <a key={m.k} href={`#${m.to}`} className="group block bg-[#1A182F] px-5 py-7 transition hover:bg-[#23223E]">
+              <a key={m.k} href={`#${m.to}`} className="group block bg-ink-900/90 px-5 py-7 transition hover:bg-ink-850">
                 <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-mist-300">{m.k}</div>
-                <p className="mt-3 text-[13px] leading-relaxed text-mist-400">{m.d}</p>
-                <span className="mt-4 inline-block font-mono text-[10px] uppercase tracking-[0.18em] text-mist-600 transition-colors group-hover:text-mist-400">
+                <p className="mt-3 text-[13px] leading-relaxed text-zinc-400">{m.d}</p>
+                <span className="mt-4 inline-block font-mono text-[10px] uppercase tracking-[0.18em] text-mist-400 transition-colors group-hover:text-mist-200">
                   open →
                 </span>
               </a>
@@ -180,7 +180,7 @@ export function StoryShielded({ onEnter }: { onEnter: () => void }) {
           </div>
           <button
             onClick={onEnter}
-            className="mt-10 font-mono text-[12px] uppercase tracking-[0.18em] text-mist-500 transition hover:text-mist-300"
+            className="mt-10 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-mist-500 to-mist-600 px-6 py-3 font-mono text-[12px] uppercase tracking-[0.18em] text-white shadow-[0_0_20px_rgba(99,102,241,0.35)] transition hover:from-mist-400 hover:to-mist-500 hover:shadow-[0_0_25px_rgba(99,102,241,0.5)]"
           >
             enter the shielded layer →
           </button>

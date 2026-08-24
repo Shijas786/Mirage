@@ -26,7 +26,8 @@ export function useSubmit(): Submitter {
     setState({ status: 'pending', hash: null, error: null })
     try {
       const result = await action()
-      setState({ status: 'done', hash: result.hash, error: null })
+      const txHash = (result as any)?.hash || (result as any)?.transaction_hash || null;
+      setState({ status: 'done', hash: txHash, error: null })
       return result
     } catch (err) {
       setState({

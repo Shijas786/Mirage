@@ -193,8 +193,8 @@ function makeNoiseTexture(): THREE.DataTexture {
 }
 
 const FluidVolume = ({
-  baseColor = '#4f3e22',
-  background = '#f4efe4',
+  baseColor = '#3730A3',
+  background = '#07070E',
   speed = 1.0,
   fov = 1.1,
   scaleNoise = 0.256,

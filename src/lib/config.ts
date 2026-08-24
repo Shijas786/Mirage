@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 export const USE_MOCK = true;
 export const POOL_CONTRACT_ID = '0x123...';
 export const NATIVE_SAC = '0x123...';

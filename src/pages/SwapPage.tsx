@@ -11,16 +11,16 @@ function OperatorInfo() {
       <button
         type="button"
         aria-label="About live matching"
-        className="flex h-5 w-5 items-center justify-center rounded-full border border-spectral/40 font-mono text-[11px] leading-none text-spectral/70 transition hover:border-spectral hover:text-spectral"
+        className="flex h-5 w-5 items-center justify-center rounded-full border border-mist-400/40 font-mono text-[11px] leading-none text-mist-300 transition hover:border-mist-400 hover:text-white"
       >
         i
       </button>
       <span
         role="tooltip"
-        className="pointer-events-none absolute left-0 top-full z-30 mt-2 w-72 rounded-xl border border-[#efe9dc]/12 bg-[#1c1710]/95 px-4 py-3 text-xs leading-relaxed text-zinc-300 opacity-0 shadow-xl backdrop-blur-md transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100"
+        className="pointer-events-none absolute left-0 top-full z-30 mt-2 w-72 rounded-xl border border-ink-750 bg-ink-900/95 px-4 py-3 text-xs leading-relaxed text-zinc-300 opacity-0 shadow-xl backdrop-blur-md transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100"
       >
-        <span className="font-mono uppercase tracking-[0.14em] text-spectral/80">Operator</span> — orders place and cancel
-        on-chain now; live matching connects when a matcher operator is running. Fills stay ZK-enforced at the midpoint,
+        <span className="font-mono uppercase tracking-[0.14em] text-mist-300">Operator</span> — orders place and cancel
+        on Starknet now; live matching connects when a matcher operator is running. Fills stay ZK-enforced at the midpoint,
         the operator only settles.
       </span>
     </span>

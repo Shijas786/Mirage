@@ -45,9 +45,9 @@ export function isPositiveAmount(input: string): boolean {
   return Number.isFinite(n) && n > 0
 }
 
-const STELLAR_ADDRESS = /^G[A-Z2-7]{55}$/
+const STARKNET_ADDRESS = /^0x[0-9a-fA-F]{60,64}$/
 
-/** Lightweight check for a classic Stellar public key (G… base32, 56 chars). */
-export function isValidStellarAddress(addr: string): boolean {
-  return STELLAR_ADDRESS.test(addr.trim())
+/** Lightweight check for a classic Starknet public key (0x... hex). */
+export function isValidStarknetAddress(addr: string): boolean {
+  return STARKNET_ADDRESS.test(addr.trim())
 }

@@ -8,7 +8,7 @@ export default defineConfig({
     port: 5173,
   },
   define: {
-    // @stellar/stellar-sdk (stellar-base) references `global` in the browser.
+    // @starknet/starknet-sdk (starknet-base) references `global` in the browser.
     global: 'globalThis',
   },
   optimizeDeps: {

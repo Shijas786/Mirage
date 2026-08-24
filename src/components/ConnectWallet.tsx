@@ -3,6 +3,7 @@ import { useWallet } from '../hooks/useWallet'
 import { truncateKey } from '../lib/format'
 import { cx } from '../lib/cx'
 import { Badge, Button, ChevronDownIcon, CopyIcon } from './ui'
+import { StarknetGlyph } from './BrandIcons'
 
 export function ConnectWallet() {
   const wallet = useWallet()
@@ -31,8 +32,9 @@ export function ConnectWallet() {
 
   if (wallet.status === 'not-installed') {
     return (
-      <a href="https://www.argent.xyz/argent-x/" target="_blank" rel="noreferrer" className="btn btn-outline">
-        Install Argent X
+      <a href="https://www.starknet.io/en/ecosystem/wallets" target="_blank" rel="noreferrer" className="btn btn-outline">
+        <StarknetGlyph className="h-4 w-4 text-mist-400" />
+        Install Starknet Wallet
       </a>
     )
   }
@@ -41,35 +43,39 @@ export function ConnectWallet() {
     return (
       <div className="relative" ref={menuRef}>
         <button type="button" onClick={() => setOpen((o) => !o)} className="btn btn-outline gap-2.5">
-          <span className={cx('h-2 w-2 rounded-full', wallet.isTestnet ? 'bg-patina-400' : 'bg-amber-400')} />
+          <span className={cx('h-2 w-2 rounded-full', wallet.isTestnet ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]' : 'bg-amber-400')} />
           <span className="font-mono text-xs">{truncateKey(wallet.address)}</span>
           <ChevronDownIcon className="h-3.5 w-3.5 text-zinc-500" />
         </button>
 
         {open && (
-          <div className="absolute right-0 z-40 mt-2 w-72 rounded-xl border border-ink-700 bg-ink-850 p-3 shadow-panel animate-fade-in">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs font-medium text-zinc-400">Connected</span>
-              <Badge tone={wallet.isTestnet ? 'success' : 'warn'}>{wallet.network ?? 'Unknown'}</Badge>
+          <div className="absolute right-0 z-40 mt-2 w-72 rounded-2xl border border-ink-750 bg-ink-900/95 p-3.5 shadow-[0_10px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl animate-fade-in">
+            <div className="mb-2.5 flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <StarknetGlyph className="h-3.5 w-3.5 text-mist-400" />
+                <span className="text-xs font-medium text-zinc-400">Starknet Account</span>
+              </div>
+              <Badge tone={wallet.isTestnet ? 'accent' : 'warn'}>{wallet.network ?? 'Sepolia'}</Badge>
             </div>
 
             <button
               type="button"
               onClick={copyAddress}
-              className="flex w-full items-center gap-2 rounded-lg border border-ink-700 bg-ink-900/70 px-3 py-2 text-left transition hover:border-spectral/40"
+              className="flex w-full items-center gap-2 rounded-xl border border-ink-750 bg-ink-950/70 px-3 py-2 text-left transition hover:border-mist-400/50 hover:bg-ink-950"
             >
-              <span className="break-all font-mono text-xs text-zinc-300">{wallet.address}</span>
+              <span className="break-all font-mono text-xs text-zinc-200">{wallet.address}</span>
               <CopyIcon className="ml-auto h-4 w-4 shrink-0 text-zinc-500" />
             </button>
-            {copied && <p className="mt-1.5 text-xs text-patina-300">Copied to clipboard</p>}
+            {copied && <p className="mt-1.5 font-mono text-[11px] text-emerald-400">Copied to clipboard</p>}
 
             {!wallet.isTestnet && (
-              <p className="mt-2 text-xs text-amber-400">Switch Argent X to Testnet for this demo.</p>
+              <p className="mt-2 text-xs text-amber-400">Switch your wallet to Starknet Sepolia Testnet for this demo.</p>
             )}
 
             <Button
               variant="ghost"
-              className="mt-2 w-full justify-start"
+              size="sm"
+              className="mt-2.5 w-full justify-start text-zinc-400 hover:text-red-300"
               onClick={() => {
                 wallet.disconnect()
                 setOpen(false)
@@ -83,9 +89,6 @@ export function ConnectWallet() {
     )
   }
 
-  // Only a user-initiated connect shows "Connecting…". The initial silent probe
-  // ('checking') must NOT render as busy, or the button looks like it's stuck
-  // trying to connect on every load.
   const busy = wallet.status === 'connecting'
   return (
     <div className="flex items-center gap-3">
@@ -93,7 +96,8 @@ export function ConnectWallet() {
         <span className="hidden text-xs text-red-300 sm:inline">{wallet.error}</span>
       )}
       <Button onClick={() => void wallet.connect()} loading={busy}>
-        {busy ? 'Connecting…' : 'Connect Wallet'}
+        {!busy && <StarknetGlyph className="h-4 w-4 text-white" />}
+        {busy ? 'Connecting…' : 'Connect Starknet'}
       </Button>
     </div>
   )

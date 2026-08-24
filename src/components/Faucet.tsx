@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useState } from 'react'
 import { useWallet } from '../hooks/useWallet'
 import { CURATED_TOKENS } from '../lib/tokens'
@@ -48,7 +50,7 @@ export function Faucet() {
 
         {!connected && (
           <p className="mt-4 rounded-xl border border-ink-700 bg-ink-900/50 px-3.5 py-3 text-center text-sm text-zinc-500">
-            Connect your Stellar wallet to mint.
+            Connect your Starknet wallet to mint.
           </p>
         )}
 

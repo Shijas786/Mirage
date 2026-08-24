@@ -11,10 +11,10 @@ const stark = {
   600: '#4F46E5',
   700: '#4338CA',
   750: '#3730A3',
-  800: '#23223E',
-  850: '#1A182F',
-  900: '#11101E',
-  950: '#0A0910',
+  800: '#181A33',
+  850: '#111224',
+  900: '#0B0C17',
+  950: '#07070E',
 }
 
 const halo = {
@@ -23,6 +23,15 @@ const halo = {
   dim: '#6366F1',
   glow: '#818CF8',
   deep: '#4338CA',
+}
+
+// Starknet signature coral & accents
+const starknetCoral = {
+  DEFAULT: '#EC796B',
+  300: '#FFA194',
+  400: '#FF8878',
+  500: '#EC796B',
+  600: '#D95D4E',
 }
 
 // Accent
@@ -57,6 +66,7 @@ export default {
         halo,
         ink: stark, // alias — existing bg-ink-*/border-ink-* now read cool deep indigo.
         spectral: halo, // alias — existing text-spectral/bg-spectral now read blue.
+        coral: starknetCoral,
         patina,
         zinc: coolZinc,
       },

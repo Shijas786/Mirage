@@ -20,15 +20,15 @@
 
   body {
     @apply min-h-screen bg-ink-950 font-sans text-zinc-300;
-    /* Warm gold haze (the sun through fog) + a fine fractal-noise grain in the
-       negative space. Cards sit cleanly on top of the texture. */
+    /* Starknet deep cosmic space with subtle electric indigo & starburst coral dust */
     background-image:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E"),
-      radial-gradient(60rem 40rem at 50% -14rem, rgba(232, 230, 224, 0.07), transparent 60%),
-      radial-gradient(42rem 32rem at 86% 2rem, rgba(232, 230, 224, 0.04), transparent 58%);
-    background-repeat: repeat, no-repeat, no-repeat;
-    background-size: 140px 140px, auto, auto;
-    background-blend-mode: overlay, normal, normal;
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E"),
+      radial-gradient(70rem 45rem at 50% -10rem, rgba(99, 102, 241, 0.14), transparent 70%),
+      radial-gradient(50rem 35rem at 85% 5rem, rgba(236, 121, 107, 0.07), transparent 60%),
+      radial-gradient(45rem 30rem at 15% 30rem, rgba(124, 58, 237, 0.08), transparent 60%);
+    background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+    background-size: 140px 140px, auto, auto, auto;
+    background-blend-mode: overlay, normal, normal, normal;
   }
 
   h1,
@@ -39,27 +39,27 @@
   }
 
   ::selection {
-    @apply bg-spectral/30 text-mist-950;
+    @apply bg-mist-500/30 text-white;
   }
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: #3b382d transparent;
+    scrollbar-color: #212342 transparent;
   }
   *::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
   }
   *::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-ink-600;
-    border: 3px solid transparent;
+    @apply rounded-full bg-ink-750;
+    border: 2px solid transparent;
     background-clip: content-box;
   }
 }
 
 @layer components {
   .card {
-    @apply rounded-2xl border border-ink-700 bg-ink-850/80 shadow-panel;
+    @apply rounded-2xl border border-ink-800/90 bg-ink-850/80 shadow-panel backdrop-blur-xl;
   }
 
   .panel-title {
@@ -71,9 +71,9 @@
   }
 
   .input {
-    @apply w-full rounded-xl border border-ink-700 bg-ink-900/70 px-3.5 py-2.5 text-sm text-zinc-100
+    @apply w-full rounded-xl border border-ink-750/90 bg-ink-900/85 px-3.5 py-2.5 text-sm text-zinc-100
            outline-none transition placeholder:text-zinc-600
-           focus:border-spectral/60 focus:ring-2 focus:ring-spectral/20;
+           focus:border-mist-400/80 focus:ring-2 focus:ring-mist-500/25;
   }
   .input-mono {
     @apply font-mono tracking-tight;
@@ -88,10 +88,10 @@
     @apply rounded-lg px-3 py-1.5 text-xs;
   }
   .btn-primary {
-    @apply bg-spectral text-mist-950 hover:bg-spectral-soft;
+    @apply bg-gradient-to-r from-mist-500 to-mist-600 text-white shadow-[0_0_18px_rgba(99,102,241,0.35)] hover:from-mist-400 hover:to-mist-500 hover:shadow-[0_0_24px_rgba(99,102,241,0.5)];
   }
   .btn-outline {
-    @apply border border-ink-600 bg-ink-800/50 text-zinc-200 hover:border-spectral/50 hover:text-zinc-100;
+    @apply border border-ink-700 bg-ink-850/70 text-zinc-200 hover:border-mist-400/50 hover:bg-ink-800/80 hover:text-white;
   }
   .btn-ghost {
     @apply text-zinc-400 hover:bg-ink-800 hover:text-zinc-100;
@@ -104,27 +104,27 @@
     @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium;
   }
 
-  /* --- Continuum shell (monopo-continuous /app) ------------------------------ */
+  /* --- Starknet continuum shell (/app) ------------------------------ */
 
   /* The coordinate-label vernacular carried over from the landing hero. */
   .coord-label {
-    @apply font-mono text-[10px] uppercase tracking-[0.16em] text-spectral/55;
+    @apply font-mono text-[10px] uppercase tracking-[0.16em] text-mist-300/65;
   }
 
   /* Uppercase grotesque display type — the masthead + act titles. */
   .display-hd {
-    @apply font-display font-semibold uppercase tracking-[-0.03em] text-[#f6f1e6];
+    @apply font-display font-semibold uppercase tracking-[-0.03em] text-zinc-100;
     line-height: 0.98;
   }
 
-  /* The cream spread that closes the film — same world as the landing footer. */
-  .cream-panel {
-    @apply relative overflow-hidden text-[#1b1610];
-    background: #f4efe4;
+  /* Starknet deep cosmic footer panel */
+  .cream-panel,
+  .starknet-panel {
+    @apply relative overflow-hidden border-t border-ink-800/80 bg-[#07070E] text-zinc-300;
   }
 }
 
-/* Film grain, shared by the brand canvas and the cream footer. */
+/* Film grain, shared by the brand canvas and the footer. */
 .mi-grain {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.45 0.45 0.45 0 -0.4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
   background-size: 90px 90px;
@@ -140,7 +140,7 @@
 .mi-scramble-char {
   color: transparent;
   -webkit-text-fill-color: transparent;
-  background-color: #f6f1e6;
+  background-color: #E0E7FF;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.45 0.45 0.45 0 -0.4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
   background-size: 90px 90px;
   -webkit-background-clip: text;

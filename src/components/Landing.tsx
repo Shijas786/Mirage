@@ -20,6 +20,7 @@ function CoordsBackground() {
     { deg: 1, top: '57%' },
     { deg: 7.6, top: '61%' },
   ]
+  const hexes = [
     { r: 240, tx: -150, ty: -12, sides: 6 },
     { r: 200, tx: 146, ty: 22, sides: 6 },
   ]
@@ -44,7 +45,7 @@ function CoordsBackground() {
         fill="none"
         aria-hidden
       >
-        {circles.map((c, i) => (
+        {hexes.map((c, i) => (
           <path
             key={i}
             d={hexagonPath(c.r)}

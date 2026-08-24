@@ -11,7 +11,7 @@ interface ImportMetaEnv {
   readonly VITE_USDC_SAC?: string
   readonly VITE_SOROBAN_RPC_URL?: string
   readonly VITE_NETWORK_PASSPHRASE?: string
-  // --- Cross-chain bridge (Ethereum Sepolia <-> Stellar) ---
+  // --- Cross-chain bridge (Ethereum Sepolia <-> Starknet) ---
   /** Run the Bridge tab as a self-contained mock walkthrough (no wallets). */
   readonly VITE_USE_MOCK_BRIDGE?: string
   /** Ethereum chain id of the L1 bridge (Sepolia = 11155111). */
