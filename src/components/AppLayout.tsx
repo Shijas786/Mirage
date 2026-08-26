@@ -6,17 +6,32 @@ import { formatUsd } from '../lib/format'
 import { cx } from '../lib/cx'
 import { BrandCanvas } from './BrandCanvas'
 import { ConnectWallet } from './ConnectWallet'
-import { EyeGlyph, MirageMark } from './ui'
+import {
+  ArrowDownIcon,
+  EyeGlyph,
+  MirageMark,
+  ReceiveIcon,
+  SendIcon,
+  SwapIcon,
+  WalletIcon,
+} from './ui'
 import { StarknetGlyph } from './BrandIcons'
 import { ScrambleNumber } from './ScrambleNumber'
 
-const NAV = [
-  ['Portfolio', '/portfolio'],
-  ['Deposit / Withdraw', '/deposit'],
-  ['Pay', '/pay'],
-  ['Swap', '/swap'],
-  ['Receive', '/receive'],
-] as const
+interface NavItem {
+  label: string
+  to: string
+  shortLabel?: string
+  icon: (props: React.SVGProps<SVGSVGElement>) => JSX.Element
+}
+
+const NAV: readonly NavItem[] = [
+  { label: 'Portfolio', to: '/portfolio', shortLabel: 'Portfolio', icon: WalletIcon },
+  { label: 'Deposit / Withdraw', to: '/deposit', shortLabel: 'Deposit', icon: ArrowDownIcon },
+  { label: 'Pay', to: '/pay', shortLabel: 'Pay', icon: SendIcon },
+  { label: 'Swap', to: '/swap', shortLabel: 'Swap', icon: SwapIcon },
+  { label: 'Receive', to: '/receive', shortLabel: 'Receive', icon: ReceiveIcon },
+]
 
 function ShieldedChip() {
   const { balances, loadingBalances } = useMirage()
@@ -24,14 +39,14 @@ function ShieldedChip() {
   if (loadingBalances || balances.length === 0) return null
   const total = balances.reduce((sum, b) => sum + b.usdEstimate, 0)
   return (
-    <div className="hidden items-center gap-2 rounded-xl border border-ink-800 bg-ink-900/60 px-3 py-1.5 backdrop-blur-md md:flex">
+    <div className="hidden items-center gap-2 rounded-xl border border-ink-800 bg-ink-900/70 px-3 py-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.3)] backdrop-blur-md md:flex">
       <span className="coord-label text-mist-400">shielded</span>
-      <ScrambleNumber value={formatUsd(total)} revealed={revealed} className="font-mono text-sm text-zinc-100" />
+      <ScrambleNumber value={formatUsd(total)} revealed={revealed} className="font-mono text-sm font-semibold text-zinc-100" />
       <button
         type="button"
         onClick={toggle}
         aria-label={revealed ? 'Hide balance' : 'Reveal balance'}
-        className="text-mist-400/70 transition hover:text-mist-300"
+        className="text-mist-400/70 transition hover:text-mist-300 active:scale-95"
       >
         <EyeGlyph off={!revealed} className="h-4 w-4" />
       </button>
@@ -39,12 +54,42 @@ function ShieldedChip() {
   )
 }
 
+function MobileNav() {
+  return (
+    <nav
+      aria-label="Mobile navigation"
+      className="fixed bottom-3 left-1/2 z-50 flex w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2 items-center justify-around rounded-2xl border border-ink-750/90 bg-ink-900/90 p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.7)] backdrop-blur-xl md:hidden"
+    >
+      {NAV.map((item) => {
+        const Icon = item.icon
+        return (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            className={({ isActive }) =>
+              cx(
+                'flex flex-1 flex-col items-center gap-1 rounded-xl px-2 py-1.5 transition',
+                isActive
+                  ? 'bg-mist-600/30 text-white shadow-[inset_0_0_0_1px_rgba(99,102,241,0.5)] font-semibold'
+                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-ink-800/40',
+              )
+            }
+          >
+            <Icon className="h-4 w-4" />
+            <span className="font-mono text-[10px] tracking-tight">{item.shortLabel ?? item.label}</span>
+          </NavLink>
+        )
+      })}
+    </nav>
+  )
+}
+
 function AppNav() {
   return (
-    <header className="sticky top-0 z-40 border-b border-ink-800/80 bg-ink-950/75 backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-3.5">
+    <header className="sticky top-0 z-40 border-b border-ink-800/80 bg-ink-950/80 backdrop-blur-xl">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <NavLink to="/app" className="group flex items-center gap-2.5">
-          <div className="relative flex h-8 w-8 items-center justify-center rounded-xl border border-ink-750 bg-ink-900/90 shadow-[0_0_15px_rgba(99,102,241,0.2)] transition group-hover:border-mist-500/50 group-hover:shadow-[0_0_20px_rgba(99,102,241,0.35)]">
+          <div className="relative flex h-8 w-8 items-center justify-center rounded-xl border border-ink-750 bg-ink-900/90 shadow-[0_0_15px_rgba(99,102,241,0.25)] transition group-hover:border-mist-500/50 group-hover:shadow-[0_0_20px_rgba(99,102,241,0.45)]">
             <MirageMark className="h-4 w-4 text-mist-300 transition group-hover:text-white" />
             <span className="absolute -bottom-0.5 -right-0.5 flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mist-400 opacity-75" />
@@ -52,18 +97,23 @@ function AppNav() {
             </span>
           </div>
           <div className="flex flex-col">
-            <span className="font-display text-sm font-semibold tracking-tight text-zinc-100 transition group-hover:text-white">
-              mirage <sup className="align-super font-mono text-[9px] tracking-[0.2em] text-mist-400">ZK</sup>
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="font-display text-sm font-semibold tracking-tight text-zinc-100 transition group-hover:text-white">
+                mirage
+              </span>
+              <span className="rounded bg-mist-600/20 px-1 py-0.2 font-mono text-[9px] uppercase tracking-[0.16em] text-mist-300">
+                ZK
+              </span>
+            </div>
             <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-mist-400/60">Starknet L2</span>
           </div>
         </NavLink>
 
         <nav className="hidden items-center gap-1 rounded-full border border-ink-800/80 bg-ink-900/70 p-1 font-mono text-[11px] uppercase tracking-[0.14em] backdrop-blur-md md:flex">
-          {NAV.map(([label, to]) => (
+          {NAV.map((item) => (
             <NavLink
-              key={to}
-              to={to}
+              key={item.to}
+              to={item.to}
               className={({ isActive }) =>
                 cx(
                   'rounded-full px-3.5 py-1.5 transition',
@@ -73,7 +123,7 @@ function AppNav() {
                 )
               }
             >
-              {label}
+              {item.label}
             </NavLink>
           ))}
         </nav>
@@ -98,14 +148,14 @@ function AppFooter() {
     await refreshBalances()
   }
   return (
-    <footer className="relative mt-auto border-t border-ink-800/80 bg-[#07070E] text-zinc-300">
+    <footer className="relative mt-auto border-t border-ink-800/80 bg-[#07070E] pb-20 text-zinc-300 md:pb-10">
       <div
         aria-hidden
         className="mi-grain pointer-events-none absolute inset-0 opacity-20"
       />
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-ink-750 bg-ink-900 text-mist-400">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-ink-750 bg-ink-900 text-mist-400 shadow-[0_0_12px_rgba(99,102,241,0.15)]">
             <StarknetGlyph className="h-5 w-5" />
           </div>
           <div>
@@ -161,6 +211,7 @@ export function AppLayout() {
         }}
       />
       <AppFooter />
+      <MobileNav />
     </div>
   )
 }

@@ -239,6 +239,26 @@ export function Swap({ embedded }: { embedded?: boolean } = {}) {
     }
   }
 
+  const { balances } = useMirage()
+
+  function flipTokens() {
+    const prevBase = base
+    const prevQuote = quote
+    setBase(prevQuote)
+    setQuote(prevBase)
+  }
+
+  // Find balance of current asset
+  const relevantAsset = side === 'sell' ? base : quote
+  const availableBalance = balances.find((b) => b.asset === relevantAsset)?.amount ?? '0'
+
+  function applyPercentage(pct: number) {
+    const balNum = parseFloat(availableBalance)
+    if (isNaN(balNum) || balNum <= 0) return
+    const calc = ((balNum * pct) / 100).toFixed(4).replace(/\.?0+$/, '')
+    setAmount(calc)
+  }
+
   return (
     <div className={embedded ? 'space-y-5' : 'space-y-6'}>
       {!embedded && (
@@ -268,7 +288,7 @@ export function Swap({ embedded }: { embedded?: boolean } = {}) {
                   <span
                     className={cx(
                       'font-mono text-[10px] uppercase tracking-[0.16em]',
-                      livePrice ? 'text-spectral/70' : 'text-zinc-600',
+                      livePrice ? 'text-mist-400' : 'text-zinc-500',
                     )}
                   >
                     {livePrice ? 'live' : 'est'}
@@ -292,9 +312,9 @@ export function Swap({ embedded }: { embedded?: boolean } = {}) {
               type="button"
               onClick={() => setShowChart(true)}
               aria-label="Add chart"
-              className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-2xl border border-ink-700 bg-ink-900/40 py-4 transition hover:border-spectral/40"
+              className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-2xl border border-ink-750 bg-ink-900/40 py-4 transition hover:border-mist-500/40"
             >
-              <ChartIcon className="h-4 w-4 shrink-0 text-spectral/70" />
+              <ChartIcon className="h-4 w-4 shrink-0 text-mist-400/70" />
               <span className="whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-400 [writing-mode:vertical-rl]">
                 Chart
               </span>
@@ -303,17 +323,38 @@ export function Swap({ embedded }: { embedded?: boolean } = {}) {
         </div>
 
         <Card className="w-full shrink-0 self-start p-6 lg:w-[26rem]">
-          <SectionHeading icon={<ChartIcon className="h-4 w-4" />} title="Place order" />
-
-          <div className="mb-4 mt-3 grid grid-cols-2 gap-3">
-            <Field label="Base">
-              <Select value={base} onChange={(e) => setBase(e.target.value)} options={TOKEN_OPTIONS} />
-            </Field>
-            <Field label="Quote">
-              <Select value={quote} onChange={(e) => setQuote(e.target.value)} options={TOKEN_OPTIONS} />
-            </Field>
+          <div className="flex items-center justify-between">
+            <SectionHeading icon={<ChartIcon className="h-4 w-4" />} title="Place order" />
+            <span className="flex items-center gap-1.5 rounded-full border border-ink-800 bg-ink-950/70 px-2.5 py-0.5 font-mono text-[10px] text-mist-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              ZK Midpoint
+            </span>
           </div>
-          {base === quote && <p className="mb-3 text-xs text-spectral/80">Pick two different tokens.</p>}
+
+          <div className="relative mb-4 mt-4 flex items-center gap-2">
+            <div className="flex-1">
+              <Field label="From / Base">
+                <Select value={base} onChange={(e) => setBase(e.target.value)} options={TOKEN_OPTIONS} />
+              </Field>
+            </div>
+            <button
+              type="button"
+              onClick={flipTokens}
+              title="Flip tokens"
+              aria-label="Flip tokens"
+              className="mt-5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-ink-750 bg-ink-950 text-mist-400 transition hover:border-mist-500/50 hover:bg-mist-600/20 hover:text-white active:scale-95"
+            >
+              <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden>
+                <path d="M7 16V4m0 0L3 8m4-4 4 4m6 4v12m0 0 4-4m-4 4-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <div className="flex-1">
+              <Field label="To / Quote">
+                <Select value={quote} onChange={(e) => setQuote(e.target.value)} options={TOKEN_OPTIONS} />
+              </Field>
+            </div>
+          </div>
+          {base === quote && <p className="mb-3 text-xs text-amber-400">Pick two different tokens.</p>}
 
           <div className="space-y-4">
             <ToggleGroup
@@ -328,7 +369,7 @@ export function Swap({ embedded }: { embedded?: boolean } = {}) {
               label={`Price (${quote} per ${base})`}
               hint={
                 marketPrice != null ? (
-                  <span className="flex items-center gap-1.5">
+                  <span className="flex items-center justify-between">
                     <span>
                       Market{' '}
                       <span className="font-mono tabular-nums text-zinc-300">
@@ -339,9 +380,9 @@ export function Swap({ embedded }: { embedded?: boolean } = {}) {
                     <button
                       type="button"
                       onClick={useMarketPrice}
-                      className="font-mono text-spectral/80 transition hover:text-spectral"
+                      className="font-mono text-xs font-semibold text-mist-400 transition hover:text-mist-300"
                     >
-                      use
+                      Use market
                     </button>
                   </span>
                 ) : undefined
@@ -355,7 +396,45 @@ export function Swap({ embedded }: { embedded?: boolean } = {}) {
                 onChange={(e) => onPriceChange(e.target.value)}
               />
             </Field>
-            <Field label={`Amount (${base})`}>
+
+            <Field
+              label={`Amount (${base})`}
+              hint={
+                <div className="flex items-center justify-between text-[11px] text-zinc-400">
+                  <span>Balance: {availableBalance} {relevantAsset}</span>
+                  <div className="flex items-center gap-1.5 font-mono">
+                    <button
+                      type="button"
+                      onClick={() => applyPercentage(25)}
+                      className="rounded bg-ink-800 px-1.5 py-0.5 text-zinc-400 hover:bg-mist-600/30 hover:text-white"
+                    >
+                      25%
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => applyPercentage(50)}
+                      className="rounded bg-ink-800 px-1.5 py-0.5 text-zinc-400 hover:bg-mist-600/30 hover:text-white"
+                    >
+                      50%
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => applyPercentage(75)}
+                      className="rounded bg-ink-800 px-1.5 py-0.5 text-zinc-400 hover:bg-mist-600/30 hover:text-white"
+                    >
+                      75%
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => applyPercentage(100)}
+                      className="rounded bg-ink-800 px-1.5 py-0.5 text-mist-300 hover:bg-mist-600/30 hover:text-white"
+                    >
+                      MAX
+                    </button>
+                  </div>
+                </div>
+              }
+            >
               <TextInput
                 mono
                 inputMode="decimal"
@@ -364,14 +443,16 @@ export function Swap({ embedded }: { embedded?: boolean } = {}) {
                 onChange={(e) => setAmount(e.target.value)}
               />
             </Field>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-zinc-500">Est. {side === 'buy' ? 'cost' : 'proceeds'}</span>
-              <span className="font-mono tabular-nums text-zinc-200">
+
+            <div className="flex items-center justify-between rounded-xl border border-ink-800/80 bg-ink-950/50 px-3.5 py-2.5 text-sm">
+              <span className="text-zinc-400 text-xs">Est. {side === 'buy' ? 'cost' : 'proceeds'}</span>
+              <span className="font-mono text-sm font-semibold tabular-nums text-zinc-100">
                 {formatAmount(total)} {quote}
               </span>
             </div>
+
             <Button className="w-full" disabled={!valid} onClick={() => void onPlace()}>
-              Place order
+              Place sealed order
             </Button>
           </div>
         </Card>
