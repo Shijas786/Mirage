@@ -4,7 +4,7 @@ import { useProofFlow } from '../hooks/useProofFlow'
 import { TOKEN_OPTIONS } from '../lib/tokens'
 import { isPositiveAmount } from '../lib/format'
 import type { AssetCode } from '../lib/mirage-sdk'
-import { Button, Card, Field, PageIntro, SectionHeading, Select, ShieldIcon, TextInput } from './ui'
+import { Button, CyberCard, Field, PageIntro, Select, ShieldIcon, TextInput } from './ui'
 import { ProofProgress } from './ProofProgress'
 
 export function Pay({ embedded }: { embedded?: boolean } = {}) {
@@ -50,15 +50,23 @@ export function Pay({ embedded }: { embedded?: boolean } = {}) {
   return (
     <div className={embedded ? 'space-y-5' : 'space-y-6'}>
       {!embedded && (
-        <PageIntro title="Pay" subtitle="Send a private payment with the amount and participants hidden on-chain." />
+        <PageIntro
+          title="Confidential Pay"
+          subtitle="Execute encrypted 2-in / 2-out shielded transfers. Amounts, senders, and receivers stay private inside Cairo circuits."
+          badge="STARK 0-LEAK TRANSFER"
+        />
       )}
 
-      <Card className={embedded ? 'p-5' : 'mx-auto max-w-xl p-6'}>
-        <SectionHeading icon={<ShieldIcon className="h-4 w-4" />} title="Private transfer" hint="ZK-proven" />
-        <div className="mt-5 space-y-4">
+      <CyberCard
+        className={embedded ? 'p-5' : 'mx-auto max-w-xl'}
+        title="Private STARK Transfer"
+        tag="2-in / 2-out ZK"
+        icon={<ShieldIcon className="h-4.5 w-4.5 text-cyan-400" />}
+      >
+        <div className="space-y-4">
           <Field
-            label="Recipient code"
-            hint="The recipient's Mirage receive code (wr1…) from their Receive screen — the payment is encrypted to it."
+            label="Recipient Stealth Code"
+            hint="The recipient's Mirage stealth cipher (wr1…) from their Receive screen — the payment is encrypted on the Stark curve."
           >
             <div className="relative">
               <TextInput
@@ -66,12 +74,12 @@ export function Pay({ embedded }: { embedded?: boolean } = {}) {
                 placeholder="wr1…"
                 value={recipientKey}
                 onChange={(e) => setRecipientKey(e.target.value)}
-                className="pr-16"
+                className="pr-20 font-mono text-xs"
               />
               <button
                 type="button"
                 onClick={() => void pasteRecipient()}
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-ink-800 px-2 py-1 font-mono text-[11px] font-semibold text-mist-300 transition hover:bg-ink-750 hover:text-white"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg border border-mist-500/30 bg-mist-600/20 px-2.5 py-1 font-mono text-[10px] font-semibold text-mist-300 transition hover:border-mist-400 hover:bg-mist-600/40 hover:text-white"
               >
                 PASTE
               </button>
@@ -89,12 +97,12 @@ export function Pay({ embedded }: { embedded?: boolean } = {}) {
             <Field
               label="Amount"
               hint={
-                <div className="flex items-center justify-between text-[11px] text-zinc-400">
+                <div className="flex items-center justify-between font-mono text-[11px] text-zinc-400">
                   <span>Bal: {availableBalance}</span>
                   <button
                     type="button"
                     onClick={setMax}
-                    className="font-mono text-mist-400 hover:text-mist-300"
+                    className="font-mono font-bold text-mist-400 transition hover:text-mist-200"
                   >
                     MAX
                   </button>
@@ -111,29 +119,38 @@ export function Pay({ embedded }: { embedded?: boolean } = {}) {
             </Field>
           </div>
 
-          <div className="rounded-xl border border-ink-800/90 bg-ink-950/60 p-3.5 text-xs text-zinc-400">
-            <div className="coord-label mb-1.5 text-mist-400">Privacy Guarantees</div>
-            <ul className="space-y-1">
+          <div className="rounded-xl border border-white/[0.07] bg-gradient-to-b from-[#090A14] to-[#05060A] p-4 text-xs text-zinc-400 shadow-inner">
+            <div className="coord-label mb-2 flex items-center justify-between text-mist-300">
+              <span>Cryptographic Privacy Guarantees</span>
+              <span className="text-[9px] text-emerald-400">VERIFIED ✓</span>
+            </div>
+            <ul className="space-y-1.5">
               <li className="flex items-center gap-2">
-                <span className="h-1 w-1 rounded-full bg-emerald-400" />
-                <span>Hidden transfer amount via Pedersen commitments</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_rgba(34,211,238,0.8)]" />
+                <span>Hidden transfer amount via Pedersen homomorphic commitments</span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="h-1 w-1 rounded-full bg-emerald-400" />
-                <span>Stealth single-use recipient key prevents transaction linking</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_rgba(34,211,238,0.8)]" />
+                <span>Stealth single-use recipient key prevents transaction graph linking</span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="h-1 w-1 rounded-full bg-emerald-400" />
-                <span>Proven with STARK curve inside Cairo smart contracts</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_rgba(34,211,238,0.8)]" />
+                <span>Proven with STARK curve inside Cairo 2.x smart contracts</span>
               </li>
             </ul>
           </div>
 
-          <Button className="w-full" disabled={!valid} onClick={() => void onSend()}>
-            Send privately
+          <Button
+            variant="primary"
+            size="lg"
+            className="w-full"
+            disabled={!valid}
+            onClick={() => void onSend()}
+          >
+            Send Privately into Veil →
           </Button>
         </div>
-      </Card>
+      </CyberCard>
 
       <ProofProgress
         flow={proof}
@@ -144,3 +161,4 @@ export function Pay({ embedded }: { embedded?: boolean } = {}) {
     </div>
   )
 }
+

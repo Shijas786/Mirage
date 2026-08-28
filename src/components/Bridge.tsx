@@ -148,31 +148,31 @@ export interface BridgeProgress {
 
 function StepRow({ label, state, detail }: { label: string; state: StepState; detail?: ReactNode }) {
   return (
-    <li className="flex items-start gap-3">
+    <li className="flex items-start gap-3.5">
       <span
         className={cx(
-          'mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border',
-          state === 'done' && 'border-patina-500/40 bg-patina-500/15 text-patina-300',
-          state === 'active' && 'border-spectral/50 bg-spectral/15 text-spectral-soft',
-          state === 'pending' && 'border-ink-600 bg-ink-800 text-zinc-600',
-          state === 'error' && 'border-red-500/50 bg-red-500/15 text-red-300',
+          'mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-all duration-300',
+          state === 'done' && 'border-emerald-500/50 bg-emerald-500/15 text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.3)]',
+          state === 'active' && 'border-cyan-400/60 bg-cyan-500/20 text-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.4)] animate-pulse',
+          state === 'pending' && 'border-white/[0.08] bg-ink-950/80 text-zinc-600',
+          state === 'error' && 'border-red-500/50 bg-red-500/15 text-red-300 shadow-[0_0_10px_rgba(239,68,68,0.3)]',
         )}
       >
-        {state === 'done' && <CheckIcon className="h-3.5 w-3.5" />}
-        {state === 'active' && <Spinner className="h-3.5 w-3.5" />}
-        {state === 'error' && <XIcon className="h-3.5 w-3.5" />}
-        {state === 'pending' && <span className="h-1.5 w-1.5 rounded-full bg-current" />}
+        {state === 'done' && <CheckIcon className="h-3.5 w-3.5 text-emerald-400" />}
+        {state === 'active' && <Spinner className="h-3.5 w-3.5 text-cyan-300" />}
+        {state === 'error' && <XIcon className="h-3.5 w-3.5 text-red-400" />}
+        {state === 'pending' && <span className="h-1.5 w-1.5 rounded-full bg-zinc-600" />}
       </span>
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <div
           className={cx(
-            'text-sm',
-            state === 'pending' ? 'text-zinc-600' : state === 'error' ? 'text-red-300' : 'text-zinc-200',
+            'text-sm font-medium',
+            state === 'pending' ? 'text-zinc-500' : state === 'error' ? 'text-red-300' : 'text-zinc-100',
           )}
         >
           {label}
         </div>
-        {detail && <div className="mt-0.5 text-xs text-zinc-500">{detail}</div>}
+        {detail && <div className="mt-0.5 font-mono text-xs text-zinc-400">{detail}</div>}
       </div>
     </li>
   )
@@ -192,7 +192,7 @@ function TxLink({ href, label }: { href: string; label: string }) {
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="font-mono text-spectral-soft underline-offset-2 hover:underline"
+      className="font-mono text-xs text-cyan-400 underline-offset-2 transition hover:text-cyan-300 hover:underline"
     >
       {label} ↗
     </a>
@@ -221,17 +221,17 @@ function ProvenanceStrip() {
   }, [simulated])
 
   return (
-    <div className="mt-3 flex items-center justify-center gap-2 text-xs text-zinc-500">
-      <ShieldIcon className="h-3.5 w-3.5 text-spectral-dim" />
+    <div className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-white/[0.06] bg-ink-950/60 py-2 text-xs text-zinc-400">
+      <ShieldIcon className="h-4 w-4 text-cyan-400" />
       <span>
-        Provenance: Ethereum light client{' '}
-        <span className={cx('font-medium', simulated ? 'text-amber-400/80' : 'text-patina-400/90')}>
-          {simulated ? 'simulated' : 'live'}
+        Provenance: Ethereum Light Client{' '}
+        <span className={cx('font-semibold', simulated ? 'text-amber-400' : 'text-emerald-400')}>
+          [{simulated ? 'SIMULATED' : 'LIVE ON-CHAIN'}]
         </span>
         {head && (
           <>
-            {' · head '}
-            <span className="font-mono text-zinc-400">#{head.blockNumber.toString()}</span>
+            {' · Head '}
+            <span className="font-mono font-semibold text-zinc-200">#{head.blockNumber.toString()}</span>
           </>
         )}
       </span>
@@ -243,10 +243,10 @@ function ProvenanceStrip() {
 function ChainIdentity({ endpoint }: { endpoint: Endpoint }) {
   const m = ENDPOINT_META[endpoint]
   return (
-    <span className="flex items-center gap-2 px-2 py-1 text-sm font-medium text-zinc-200">
+    <span className="flex items-center gap-2 rounded-full border border-white/[0.08] bg-ink-950/80 px-2.5 py-1 text-xs font-semibold text-zinc-200">
       <CoinBadge name={m.icon} size="sm" />
       {m.label}
-      <span className="text-zinc-600">· {m.sub}</span>
+      <span className="font-mono text-[10px] text-mist-400">[{m.sub}]</span>
     </span>
   )
 }
@@ -277,14 +277,14 @@ function ChainSelect({
         type="button"
         disabled={disabled}
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-2 rounded-full border border-ink-700 bg-ink-850 px-2 py-1 text-sm font-medium text-zinc-200 transition hover:border-spectral/40 disabled:opacity-60"
+        className="flex items-center gap-2 rounded-full border border-white/[0.1] bg-ink-950/80 px-2.5 py-1 text-xs font-semibold text-zinc-200 transition hover:border-mist-400/50 hover:bg-ink-900 disabled:opacity-60"
       >
         <CoinBadge name={m.icon} size="sm" />
         {m.label}
-        <ChevronDownIcon className="h-3.5 w-3.5 text-zinc-500" />
+        <ChevronDownIcon className="h-3.5 w-3.5 text-zinc-400" />
       </button>
       {open && (
-        <div className="absolute right-0 z-40 mt-2 w-48 rounded-xl border border-ink-700 bg-ink-850 p-1 shadow-panel animate-fade-in">
+        <div className="absolute right-0 z-40 mt-2 w-48 rounded-xl border border-white/[0.12] bg-[#0E1020] p-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.8)] backdrop-blur-2xl animate-fade-in">
           {L1_CHAINS.map((c) => {
             const cm = ENDPOINT_META[c]
             return (
@@ -296,13 +296,13 @@ function ChainSelect({
                   setOpen(false)
                 }}
                 className={cx(
-                  'flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm transition',
-                  c === value ? 'bg-spectral/10 text-zinc-100' : 'text-zinc-300 hover:bg-ink-800',
+                  'flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-xs font-semibold transition',
+                  c === value ? 'bg-mist-600/30 text-zinc-100 shadow-[inset_0_0_0_1px_rgba(99,102,241,0.4)]' : 'text-zinc-300 hover:bg-ink-800/60',
                 )}
               >
                 <CoinBadge name={cm.icon} size="sm" />
                 <span className="font-medium">{cm.label}</span>
-                <span className="ml-auto text-xs text-zinc-600">{cm.sub}</span>
+                <span className="ml-auto font-mono text-[10px] text-zinc-500">{cm.sub}</span>
               </button>
             )
           })}
@@ -325,9 +325,9 @@ function EndpointPanel({
   children: ReactNode
 }) {
   return (
-    <div className="rounded-2xl border border-ink-700 bg-ink-900/50 p-4">
+    <div className="rounded-2xl border border-white/[0.08] bg-gradient-to-b from-ink-950/90 to-ink-900/90 p-4 shadow-inner">
       <div className="mb-3 flex items-center justify-between">
-        <span className="text-xs font-medium text-zinc-400">{role}</span>
+        <span className="coord-label text-mist-400">{role}</span>
         <div className="flex items-center gap-2">
           {wallet}
           {identity}
@@ -341,7 +341,7 @@ function EndpointPanel({
 /** A read-only token chip (icon + code). */
 function TokenChip({ code }: { code: string }) {
   return (
-    <span className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-ink-700 bg-ink-850 px-3 py-2 text-sm font-semibold text-zinc-100">
+    <span className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-white/[0.09] bg-ink-950 px-3 py-2 text-sm font-semibold text-zinc-100 shadow-sm">
       <CoinBadge name={code} size="sm" />
       {code}
     </span>
@@ -689,19 +689,25 @@ export function Bridge({ embedded, onProgress }: { embedded?: boolean; onProgres
     <div className={embedded ? 'space-y-5' : 'mx-auto max-w-xl space-y-6'}>
       {!embedded && (
         <PageIntro
-          title="Deposit"
-          subtitle="Move assets between Layer 1 and the Mirage shielded pool — deposit in, or withdraw back out."
+          title={direction === 'deposit' ? 'Cross Into Veil' : 'Redeem to Layer-1'}
+          subtitle="Deposit Starknet/Ethereum assets into zero-knowledge Pedersen notes, or redeem them back out."
+          badge="CROSS-CHAIN ZK PORTAL"
         />
       )}
 
-      <Card className="p-5">
+      <CyberCard
+        className="p-6"
+        title={direction === 'deposit' ? 'Deposit & Mint Shielded Note' : 'Redeem & Burn Shielded Note'}
+        tag={direction === 'deposit' ? 'L1 ➔ Mirage ZK' : 'Mirage ZK ➔ L1'}
+        icon={<ShieldIcon className="h-4.5 w-4.5 text-cyan-400" />}
+      >
         {/* From */}
         <EndpointPanel role="From" identity={fromIdentity} wallet={evmWalletChip}>
           {direction === 'deposit' ? (
             <>
               <div className="flex items-center gap-3">
                 <input
-                  className="input input-mono flex-1 border-none bg-transparent px-0 text-2xl focus:ring-0"
+                  className="input input-mono flex-1 border-none bg-transparent px-0 font-mono text-2xl font-bold text-zinc-100 placeholder:text-zinc-600 focus:ring-0"
                   inputMode="decimal"
                   placeholder="0.00"
                   value={amount}
@@ -709,7 +715,7 @@ export function Bridge({ embedded, onProgress }: { embedded?: boolean; onProgres
                   disabled={running}
                 />
                 {l1 === 'starknet' ? (
-                  <div className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-ink-700 bg-ink-850 px-2.5 py-2">
+                  <div className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-white/[0.1] bg-ink-950 px-3 py-2 shadow-sm">
                     <CoinBadge name={customMode ? depositToken.icon : depositCode} size="sm" />
                     <select
                       className="cursor-pointer appearance-none bg-transparent text-sm font-semibold text-zinc-100 focus:outline-none"
@@ -753,20 +759,20 @@ export function Bridge({ embedded, onProgress }: { embedded?: boolean; onProgres
                     onChange={(e) => setCustomSac(e.target.value)}
                     disabled={running}
                   />
-                  {resolvingCustom && <p className="text-xs text-zinc-500">Resolving token…</p>}
+                  {resolvingCustom && <p className="text-xs text-zinc-400">Resolving token…</p>}
                   {customError && <p className="text-xs text-red-300">{customError}</p>}
                   {!resolvingCustom && !customError && depositToken.sac === customSac.trim() && (
-                    <p className="text-xs text-patina-300">
+                    <p className="text-xs text-emerald-300">
                       Found {depositToken.code} · {depositToken.decimals} decimals
                     </p>
                   )}
                 </div>
               )}
               {direction === 'deposit' && l1 === 'starknet' && !customMode && depositToken.faucet && (
-                <p className="mt-2 text-xs text-zinc-500">
-                  Need test {depositToken.code}? Mint some from the{' '}
-                  <a href="#/faucet" className="text-spectral-soft hover:underline">
-                    faucet
+                <p className="mt-2 font-mono text-[11px] text-zinc-400">
+                  Need test {depositToken.code}? Mint tokens from the{' '}
+                  <a href="#/faucet" className="text-cyan-400 hover:underline">
+                    testnet faucet
                   </a>
                   .
                 </p>
@@ -775,10 +781,10 @@ export function Bridge({ embedded, onProgress }: { embedded?: boolean; onProgres
           ) : withdrawableNotes.length > 0 ? (
             <>
               <div className="flex items-center gap-3">
-                <div className="input input-mono flex-1 border-none bg-transparent px-0 text-2xl text-zinc-100">
+                <div className="input input-mono flex-1 border-none bg-transparent px-0 font-mono text-2xl font-bold text-zinc-100">
                   {withdrawAmountHuman || '0.00'}
                 </div>
-                <div className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-ink-700 bg-ink-850 px-2.5 py-2">
+                <div className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-white/[0.1] bg-ink-950 px-3 py-2 shadow-sm">
                   <CoinBadge name={selectedNote?.assetCode ?? '—'} size="sm" />
                   <select
                     className="cursor-pointer appearance-none bg-transparent text-sm font-semibold text-zinc-100 focus:outline-none"
@@ -794,26 +800,26 @@ export function Bridge({ embedded, onProgress }: { embedded?: boolean; onProgres
                   </select>
                 </div>
               </div>
-              <div className="mt-2 text-xs text-zinc-500">
-                Withdraw sends one full shielded note · {withdrawableNotes.length} available
+              <div className="mt-2 font-mono text-[11px] text-zinc-400">
+                Withdraw releases one full shielded note · {withdrawableNotes.length} available
               </div>
             </>
           ) : (
             <div className="flex items-center gap-3">
-              <div className="input input-mono flex-1 border-none bg-transparent px-0 text-2xl text-zinc-600">0.00</div>
+              <div className="input input-mono flex-1 border-none bg-transparent px-0 font-mono text-2xl text-zinc-600">0.00</div>
               <TokenChip code="—" />
             </div>
           )}
         </EndpointPanel>
 
         {/* Flip direction */}
-        <div className="relative flex h-2 justify-center">
+        <div className="relative my-1 flex h-2 justify-center">
           <button
             type="button"
             onClick={flip}
             disabled={running}
             aria-label="Switch direction"
-            className="absolute -top-3 flex h-9 w-9 items-center justify-center rounded-xl border border-ink-700 bg-ink-850 text-zinc-300 transition hover:border-spectral/50 hover:text-spectral-soft disabled:opacity-50"
+            className="absolute -top-3.5 flex h-9 w-9 items-center justify-center rounded-xl border border-white/[0.12] bg-gradient-to-br from-ink-900 to-ink-950 text-zinc-300 shadow-[0_0_15px_rgba(99,102,241,0.2)] transition-all hover:scale-105 hover:border-mist-400 hover:text-white hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] disabled:opacity-50"
           >
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none">
               <path d="M7 4v16m0 0 3-3m-3 3-3-3M17 20V4m0 0 3 3m-3-3-3 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -824,7 +830,7 @@ export function Bridge({ embedded, onProgress }: { embedded?: boolean; onProgres
         {/* To */}
         <EndpointPanel role="To" identity={toIdentity}>
           <div className="flex items-center gap-3">
-            <div className="input input-mono flex-1 border-none bg-transparent px-0 text-2xl text-zinc-400">
+            <div className="input input-mono flex-1 border-none bg-transparent px-0 font-mono text-2xl font-bold text-zinc-300">
               {direction === 'withdraw' ? withdrawAmountHuman || '0.00' : amountValid ? amount : '0.00'}
             </div>
             <TokenChip code={String(toCode)} />
@@ -833,7 +839,7 @@ export function Bridge({ embedded, onProgress }: { embedded?: boolean; onProgres
             <TextInput
               mono
               className="mt-3"
-              placeholder={l1 === 'starknet' ? 'Starknet recipient · G…' : 'Ethereum recipient · 0x…'}
+              placeholder={l1 === 'starknet' ? 'Starknet recipient · 0x…' : 'Ethereum recipient · 0x…'}
               value={recipient}
               onChange={(e) => setRecipient(e.target.value)}
               disabled={running}
@@ -841,46 +847,50 @@ export function Bridge({ embedded, onProgress }: { embedded?: boolean; onProgres
           )}
         </EndpointPanel>
 
-        {/* Config warning (Ethereum deposit, live but unconfigured) */}
+        {/* Config warning */}
         {direction === 'deposit' && l1 === 'ethereum' && !USE_MOCK_BRIDGE && !BRIDGE_CONFIGURED && (
-          <p className="mt-4 rounded-xl border border-amber-500/20 bg-amber-500/10 px-3.5 py-2.5 text-xs text-amber-300">
+          <p className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-xs text-amber-300">
             Live bridge addresses are not configured. Set the <span className="font-mono">VITE_*</span> bridge vars, or run with{' '}
-            <span className="font-mono">VITE_USE_MOCK_BRIDGE=true</span>.
+            <span className="font-mono font-bold">VITE_USE_MOCK_BRIDGE=true</span>.
           </p>
         )}
 
-        {/* Ethereum bridge-out still needs the mock (L1 unlock not wired) */}
         {withdrawGated && (
-          <p className="mt-4 rounded-xl border border-amber-500/20 bg-amber-500/10 px-3.5 py-2.5 text-xs text-amber-300">
+          <p className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-xs text-amber-300">
             Bridge-out to Ethereum isn’t wired for the L1 unlock yet. Preview the burn → unlock flow with{' '}
-            <span className="font-mono">VITE_USE_MOCK_BRIDGE=true</span>.
+            <span className="font-mono font-bold">VITE_USE_MOCK_BRIDGE=true</span>.
           </p>
         )}
 
-        <Button className="mt-5 w-full" onClick={action.onClick} disabled={action.disabled} loading={action.loading}>
+        <Button
+          variant="primary"
+          size="lg"
+          className="mt-6 w-full"
+          onClick={action.onClick}
+          disabled={action.disabled}
+          loading={action.loading}
+        >
           {action.label}
         </Button>
 
         {l1 === 'ethereum' ? (
           <ProvenanceStrip />
         ) : (
-          <p className="mt-3 text-center text-xs text-zinc-500">
+          <p className="mt-4 text-center font-mono text-[11px] text-zinc-400">
             {direction === 'deposit'
               ? 'Funds enter the shielded pool directly on Starknet Testnet.'
               : 'Redeems a shielded note back to a classic Starknet account.'}
           </p>
         )}
-      </Card>
+      </CyberCard>
 
-      {/* Progress */}
+      {/* Progress Tracker */}
       {showTracker && (
-        <Card className="p-5 animate-fade-in">
-          <div className="mb-4 flex items-center justify-between">
-            <span className="panel-title">{direction === 'deposit' ? 'Depositing' : 'Withdrawing'}</span>
-            <span className="font-mono text-xs text-zinc-500">
-              {ENDPOINT_META[from].label} → {ENDPOINT_META[to].label}
-            </span>
-          </div>
+        <CyberCard
+          className="animate-fade-in"
+          title={direction === 'deposit' ? 'Shielded Deposit Pipeline' : 'Note Redemption Pipeline'}
+          tag={`${ENDPOINT_META[from].label} ➔ ${ENDPOINT_META[to].label}`}
+        >
           <ol className="space-y-4">
             {steps.map((label, i) => (
               <StepRow key={label} label={label} state={stepStateFor(i, step, status)} detail={stepDetail(i)} />
@@ -888,8 +898,8 @@ export function Bridge({ embedded, onProgress }: { embedded?: boolean; onProgres
           </ol>
           {status === 'error' && error && <p className="mt-4 text-sm text-red-300">{error}</p>}
           {status === 'done' && (
-            <p className="mt-4 flex items-center gap-2 text-sm text-emerald-300">
-              <CheckIcon className="h-4 w-4" />
+            <p className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+              <CheckIcon className="h-4 w-4 text-emerald-400" />
               {direction === 'deposit' ? (
                 <>
                   Shielded {String(toCode)} now visible in{' '}
@@ -907,11 +917,13 @@ export function Bridge({ embedded, onProgress }: { embedded?: boolean; onProgres
           )}
           {(status === 'done' || status === 'error') && (
             <Button variant="outline" className="mt-5 w-full" onClick={reset}>
-              {direction === 'deposit' ? 'Deposit again' : 'Withdraw again'}
+              {direction === 'deposit' ? 'Deposit another note' : 'Withdraw another note'}
             </Button>
           )}
-        </Card>
+        </CyberCard>
       )}
     </div>
   )
 }
+
+export default Bridge

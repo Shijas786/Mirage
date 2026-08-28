@@ -187,16 +187,17 @@ export function ExternalLinkIcon(props: SVGProps<SVGSVGElement>) {
 
 // --- Primitives -------------------------------------------------------------
 
-type ButtonVariant = 'primary' | 'outline' | 'ghost' | 'danger'
+type ButtonVariant = 'primary' | 'cyber' | 'outline' | 'ghost' | 'danger'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
-  size?: 'md' | 'sm'
+  size?: 'md' | 'sm' | 'lg'
   loading?: boolean
 }
 
 const VARIANT_CLASS: Record<ButtonVariant, string> = {
   primary: 'btn-primary',
+  cyber: 'btn-cyber',
   outline: 'btn-outline',
   ghost: 'btn-ghost',
   danger: 'btn-danger',
@@ -215,7 +216,13 @@ export function Button({
   return (
     <button
       type={type}
-      className={cx('btn', VARIANT_CLASS[variant], size === 'sm' && 'btn-sm', className)}
+      className={cx(
+        'btn',
+        VARIANT_CLASS[variant],
+        size === 'sm' && 'btn-sm',
+        size === 'lg' && 'px-5 py-3 text-base font-bold',
+        className,
+      )}
       disabled={disabled || loading}
       {...rest}
     >
@@ -225,8 +232,62 @@ export function Button({
   )
 }
 
-export function Card({ className, children }: { className?: string; children: ReactNode }) {
-  return <div className={cx('card', className)}>{children}</div>
+export function Card({
+  className,
+  glow = false,
+  brackets = false,
+  children,
+}: {
+  className?: string
+  glow?: boolean
+  brackets?: boolean
+  children: ReactNode
+}) {
+  return (
+    <div
+      className={cx(
+        'card',
+        glow && 'card-glow',
+        brackets && 'cyber-brackets',
+        className,
+      )}
+    >
+      {children}
+    </div>
+  )
+}
+
+export function CyberCard({
+  className,
+  title,
+  tag,
+  icon,
+  children,
+}: {
+  className?: string
+  title?: string
+  tag?: string
+  icon?: ReactNode
+  children: ReactNode
+}) {
+  return (
+    <div className={cx('cyber-panel cyber-brackets p-5 sm:p-6', className)}>
+      {(title || tag || icon) && (
+        <div className="mb-4 flex items-center justify-between border-b border-white/[0.06] pb-3">
+          <div className="flex items-center gap-2.5">
+            {icon && <div className="text-mist-400">{icon}</div>}
+            {title && <h3 className="font-display text-sm font-semibold tracking-tight text-zinc-100">{title}</h3>}
+          </div>
+          {tag && (
+            <span className="rounded-md border border-white/[0.08] bg-ink-950/80 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-mist-300">
+              {tag}
+            </span>
+          )}
+        </div>
+      )}
+      {children}
+    </div>
+  )
 }
 
 export function Field({
@@ -246,7 +307,7 @@ export function Field({
         {label}
       </label>
       {children}
-      {hint && <div className="mt-1.5 text-xs text-zinc-500">{hint}</div>}
+      {hint && <div className="mt-1.5 text-xs text-zinc-400">{hint}</div>}
     </div>
   )
 }
@@ -283,15 +344,16 @@ export function Select({ options, className, ...rest }: SelectProps) {
   )
 }
 
-type BadgeTone = 'neutral' | 'accent' | 'success' | 'warn' | 'danger' | 'coral'
+type BadgeTone = 'neutral' | 'accent' | 'success' | 'warn' | 'danger' | 'coral' | 'cyan'
 
 const BADGE_TONE: Record<BadgeTone, string> = {
-  neutral: 'bg-ink-800 text-zinc-300 border border-ink-750',
-  accent: 'bg-mist-600/20 text-mist-300 border border-mist-500/30',
-  coral: 'bg-[#EC796B]/15 text-[#FFA194] border border-[#EC796B]/30',
-  success: 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30',
-  warn: 'bg-amber-500/15 text-amber-300 border border-amber-500/30',
-  danger: 'bg-red-500/15 text-red-300 border border-red-500/30',
+  neutral: 'bg-ink-800/80 text-zinc-300 border border-white/[0.08]',
+  accent: 'bg-mist-600/20 text-mist-300 border border-mist-500/30 shadow-[0_0_10px_rgba(99,102,241,0.15)]',
+  cyan: 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 shadow-[0_0_10px_rgba(34,211,238,0.15)]',
+  coral: 'bg-[#EC796B]/15 text-[#FFA194] border border-[#EC796B]/30 shadow-[0_0_10px_rgba(236,121,107,0.15)]',
+  success: 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.15)]',
+  warn: 'bg-amber-500/15 text-amber-300 border border-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.15)]',
+  danger: 'bg-red-500/15 text-red-300 border border-red-500/30 shadow-[0_0_10px_rgba(239,68,68,0.15)]',
 }
 
 export function Badge({
@@ -303,18 +365,32 @@ export function Badge({
   className?: string
   children: ReactNode
 }) {
-  return <span className={cx('badge', BADGE_TONE[tone], className)}>{children}</span>
+  return <span className={cx('badge font-mono text-[10px] tracking-wide', BADGE_TONE[tone], className)}>{children}</span>
 }
 
 export function AssetAvatar({ code, className }: { code: AssetCode; className?: string }) {
   return <CoinBadge name={code} size="lg" className={className} />
 }
 
-export function PageIntro({ title, subtitle }: { title: string; subtitle: string }) {
+export function PageIntro({
+  title,
+  subtitle,
+  badge = 'STARKNET ZK POOL',
+}: {
+  title: string
+  subtitle: string
+  badge?: string
+}) {
   return (
-    <div>
-      <h1 className="text-2xl font-semibold leading-tight tracking-tight text-zinc-100">{title}</h1>
-      <p className="mt-1.5 max-w-xl text-sm text-zinc-400">{subtitle}</p>
+    <div className="relative mb-6">
+      <div className="mb-2 flex items-center gap-2">
+        <span className="coord-label flex items-center gap-1.5 text-mist-400">
+          <span className="h-1.5 w-1.5 rounded-full bg-mist-400" />
+          {badge}
+        </span>
+      </div>
+      <h1 className="display-hd text-3xl font-semibold tracking-tight text-zinc-100 sm:text-4xl">{title}</h1>
+      <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">{subtitle}</p>
     </div>
   )
 }
@@ -331,10 +407,10 @@ export function SectionHeading({
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2.5">
-        {icon && <span className="text-zinc-500">{icon}</span>}
+        {icon && <span className="text-mist-400">{icon}</span>}
         <h2 className="panel-title">{title}</h2>
       </div>
-      {hint && <span className="font-mono text-xs text-zinc-500">{hint}</span>}
+      {hint && <span className="font-mono text-xs text-zinc-400">{hint}</span>}
     </div>
   )
 }
@@ -342,7 +418,6 @@ export function SectionHeading({
 interface ToggleOption<T extends string> {
   value: T
   label: string
-  /** Tailwind classes applied when this option is active. */
   activeClassName?: string
 }
 
@@ -356,7 +431,7 @@ export function ToggleGroup<T extends string>({
   options: ToggleOption<T>[]
 }) {
   return (
-    <div className="grid grid-cols-2 gap-1 rounded-xl border border-ink-750 bg-ink-950/80 p-1">
+    <div className="grid grid-cols-2 gap-1 rounded-xl border border-white/[0.08] bg-ink-950/80 p-1">
       {options.map((option) => {
         const active = value === option.value
         return (
@@ -365,11 +440,11 @@ export function ToggleGroup<T extends string>({
             type="button"
             onClick={() => onChange(option.value)}
             className={cx(
-              'rounded-lg py-2 text-sm font-semibold transition',
+              'rounded-lg py-2 text-sm font-semibold transition-all duration-200',
               active
                 ? (option.activeClassName ??
-                    'bg-mist-600/30 text-zinc-100 shadow-[inset_0_0_0_1px_rgba(99,102,241,0.5)]')
-                : 'text-zinc-400 hover:text-zinc-200',
+                    'bg-gradient-to-r from-mist-600/40 to-mist-500/30 text-zinc-100 shadow-[inset_0_0_0_1px_rgba(99,102,241,0.5),0_0_12px_rgba(99,102,241,0.25)]')
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-ink-850/50',
             )}
           >
             {option.label}
@@ -393,16 +468,16 @@ export function TxBanner({
 }) {
   if (status === 'done' && hash) {
     return (
-      <div className="flex items-center gap-2 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-3.5 py-2.5 text-sm text-emerald-300 animate-fade-in">
-        <CheckIcon className="h-4 w-4 shrink-0" />
+      <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.15)] animate-fade-in">
+        <CheckIcon className="h-4 w-4 shrink-0 text-emerald-400" />
         <span>{successLabel}</span>
-        <span className="ml-auto font-mono text-xs text-emerald-400/70">{truncateKey(hash, 6, 6)}</span>
+        <span className="ml-auto font-mono text-xs text-emerald-400/80">{truncateKey(hash, 6, 6)}</span>
       </div>
     )
   }
   if (status === 'error') {
     return (
-      <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-3.5 py-2.5 text-sm text-red-300 animate-fade-in">
+      <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300 shadow-[0_0_20px_rgba(239,68,68,0.15)] animate-fade-in">
         {error ?? 'Transaction failed.'}
       </div>
     )

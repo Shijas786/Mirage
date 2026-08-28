@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -19,16 +19,16 @@
   }
 
   body {
-    @apply min-h-screen bg-ink-950 font-sans text-zinc-300;
-    /* Starknet deep cosmic space with subtle electric indigo & starburst coral dust */
+    @apply min-h-screen bg-[#06070B] font-sans text-zinc-300 antialiased;
+    /* Starknet deep cosmic space with subtle electric indigo, cyan lattice, & starburst coral dust */
     background-image:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E"),
-      radial-gradient(70rem 45rem at 50% -10rem, rgba(99, 102, 241, 0.14), transparent 70%),
-      radial-gradient(50rem 35rem at 85% 5rem, rgba(236, 121, 107, 0.07), transparent 60%),
-      radial-gradient(45rem 30rem at 15% 30rem, rgba(124, 58, 237, 0.08), transparent 60%);
-    background-repeat: repeat, no-repeat, no-repeat, no-repeat;
-    background-size: 140px 140px, auto, auto, auto;
-    background-blend-mode: overlay, normal, normal, normal;
+      linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+      radial-gradient(80rem 50rem at 50% -12rem, rgba(99, 102, 241, 0.16), transparent 70%),
+      radial-gradient(60rem 40rem at 90% 10rem, rgba(236, 121, 107, 0.09), transparent 60%),
+      radial-gradient(55rem 35rem at 10% 35rem, rgba(34, 211, 238, 0.06), transparent 60%);
+    background-size: 32px 32px, 32px 32px, auto, auto, auto;
+    background-repeat: repeat, repeat, no-repeat, no-repeat, no-repeat;
   }
 
   h1,
@@ -47,19 +47,28 @@
     scrollbar-color: #212342 transparent;
   }
   *::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
   *::-webkit-scrollbar-thumb {
     @apply rounded-full bg-ink-750;
-    border: 2px solid transparent;
+    border: 1px solid transparent;
     background-clip: content-box;
   }
 }
 
 @layer components {
+  /* Futuristic frosted cyber card */
   .card {
-    @apply rounded-2xl border border-ink-800/90 bg-ink-850/80 shadow-panel backdrop-blur-xl;
+    @apply relative rounded-2xl border border-white/[0.08] bg-ink-900/80 shadow-panel backdrop-blur-2xl transition-all duration-300;
+  }
+
+  .card-glow {
+    @apply relative overflow-hidden rounded-2xl border border-mist-500/20 bg-ink-900/85 shadow-[0_8px_32px_rgba(0,0,0,0.6),0_0_20px_rgba(99,102,241,0.12)] backdrop-blur-2xl;
+  }
+
+  .cyber-panel {
+    @apply relative rounded-2xl border border-white/[0.09] bg-gradient-to-b from-[#111326]/90 to-[#0B0C17]/90 shadow-[0_12px_40px_rgba(0,0,0,0.7)] backdrop-blur-2xl;
   }
 
   .panel-title {
@@ -71,9 +80,9 @@
   }
 
   .input {
-    @apply w-full rounded-xl border border-ink-750/90 bg-ink-900/85 px-3.5 py-2.5 text-sm text-zinc-100
-           outline-none transition placeholder:text-zinc-600
-           focus:border-mist-400/80 focus:ring-2 focus:ring-mist-500/25;
+    @apply w-full rounded-xl border border-white/[0.09] bg-ink-950/80 px-4 py-3 text-sm text-zinc-100
+           outline-none transition-all placeholder:text-zinc-600
+           focus:border-mist-400/80 focus:bg-ink-900/90 focus:ring-2 focus:ring-mist-500/25;
   }
   .input-mono {
     @apply font-mono tracking-tight;
@@ -81,23 +90,28 @@
 
   .btn {
     @apply inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-xl px-4 py-2.5
-           text-sm font-semibold transition active:scale-[0.99]
+           text-sm font-semibold transition-all duration-200 active:scale-[0.98]
            disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100;
   }
   .btn-sm {
     @apply rounded-lg px-3 py-1.5 text-xs;
   }
   .btn-primary {
-    @apply bg-gradient-to-r from-mist-500 to-mist-600 text-white shadow-[0_0_18px_rgba(99,102,241,0.35)] hover:from-mist-400 hover:to-mist-500 hover:shadow-[0_0_24px_rgba(99,102,241,0.5)];
+    @apply relative overflow-hidden bg-gradient-to-r from-mist-600 via-mist-500 to-indigo-500 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]
+           hover:from-mist-500 hover:via-mist-400 hover:to-indigo-400 hover:shadow-[0_0_30px_rgba(99,102,241,0.6)];
+  }
+  .btn-cyber {
+    @apply relative overflow-hidden border border-mist-400/40 bg-gradient-to-r from-mist-600/30 to-cyan-500/20 text-white shadow-[0_0_15px_rgba(99,102,241,0.25)]
+           hover:border-mist-300 hover:from-mist-600/50 hover:to-cyan-400/30 hover:shadow-[0_0_25px_rgba(99,102,241,0.45)];
   }
   .btn-outline {
-    @apply border border-ink-700 bg-ink-850/70 text-zinc-200 hover:border-mist-400/50 hover:bg-ink-800/80 hover:text-white;
+    @apply border border-white/[0.12] bg-ink-900/70 text-zinc-200 hover:border-mist-400/60 hover:bg-ink-800/90 hover:text-white hover:shadow-[0_0_15px_rgba(99,102,241,0.15)];
   }
   .btn-ghost {
-    @apply text-zinc-400 hover:bg-ink-800 hover:text-zinc-100;
+    @apply text-zinc-400 hover:bg-ink-800/60 hover:text-zinc-100;
   }
   .btn-danger {
-    @apply border border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20;
+    @apply border border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20 hover:border-red-500/50 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)];
   }
 
   .badge {
@@ -108,7 +122,7 @@
 
   /* The coordinate-label vernacular carried over from the landing hero. */
   .coord-label {
-    @apply font-mono text-[10px] uppercase tracking-[0.16em] text-mist-300/65;
+    @apply font-mono text-[10px] uppercase tracking-[0.18em] text-mist-300/75;
   }
 
   /* Uppercase grotesque display type — the masthead + act titles. */
@@ -117,10 +131,36 @@
     line-height: 0.98;
   }
 
+  /* Cyber bracket accents for cards */
+  .cyber-brackets::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    border-top: 1.5px solid rgba(99, 102, 241, 0.7);
+    border-left: 1.5px solid rgba(99, 102, 241, 0.7);
+    border-top-left-radius: 4px;
+    pointer-events: none;
+  }
+  .cyber-brackets::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    border-bottom: 1.5px solid rgba(236, 121, 107, 0.7);
+    border-right: 1.5px solid rgba(236, 121, 107, 0.7);
+    border-bottom-right-radius: 4px;
+    pointer-events: none;
+  }
+
   /* Starknet deep cosmic footer panel */
   .cream-panel,
   .starknet-panel {
-    @apply relative overflow-hidden border-t border-ink-800/80 bg-[#07070E] text-zinc-300;
+    @apply relative overflow-hidden border-t border-white/[0.08] bg-[#06070B] text-zinc-300;
   }
 }
 
@@ -135,8 +175,7 @@
   display: inline-block;
   font-variant-ligatures: none;
 }
-/* Scrambling glyphs are filled with fine film grain (not a glitch) — a grainy
-   dissolve that resolves to solid type once the letter settles. */
+/* Scrambling glyphs are filled with fine film grain */
 .mi-scramble-char {
   color: transparent;
   -webkit-text-fill-color: transparent;
@@ -146,3 +185,4 @@
   -webkit-background-clip: text;
   background-clip: text;
 }
+

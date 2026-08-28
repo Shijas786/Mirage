@@ -48,3 +48,9 @@ A1priv/A1priv.ts
 
 # cairo build artifacts
 /cairo/target/
+
+# scratch scripts and local agent configs
+test-*.mjs
+replace.js
+skills-lock.json
+.agents/
