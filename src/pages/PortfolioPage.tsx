@@ -8,6 +8,7 @@ import { loadNotes, type StoredNote } from '../lib/note-store'
 import { assetMeta } from '../lib/tokens'
 import { formatAmount, formatUsd } from '../lib/format'
 import { cx } from '../lib/cx'
+import { sfx } from '../lib/sound'
 import { AssetAvatar, ChevronDownIcon, CopyIcon, EyeGlyph, LockIcon, ShieldIcon } from '../components/ui'
 import { ScrambleNumber } from '../components/ScrambleNumber'
 import type { AssetCode } from '../lib/mirage-sdk'
@@ -58,6 +59,7 @@ export function PortfolioPage() {
   const totalNotesCount = Array.from(notesByAsset.values()).reduce((sum, arr) => sum + arr.length, 0)
 
   async function copyCommitment(commitment: string) {
+    sfx.click()
     try {
       await navigator.clipboard.writeText(commitment)
       setCopiedHash(commitment)
@@ -168,6 +170,37 @@ export function PortfolioPage() {
         </div>
       </div>
 
+      {/* Note Lineage & Cryptographic Lifecycle */}
+      <div className="mb-8 rounded-2xl border border-white/[0.08] bg-gradient-to-b from-[#0E1020]/80 to-[#06070B]/80 p-5 backdrop-blur-2xl">
+        <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+          <div className="flex items-center gap-2">
+            <ShieldIcon className="h-4 w-4 text-cyan-400" />
+            <span className="font-display text-xs font-bold uppercase tracking-wider text-zinc-200">
+              ZK Note Cryptographic Lifecycle Flow
+            </span>
+          </div>
+          <span className="font-mono text-[10px] text-mist-400">[ 2-IN / 2-OUT MERKLE DAG ]</span>
+        </div>
+
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="flex flex-col items-center rounded-xl border border-indigo-500/20 bg-indigo-500/5 p-3 text-center">
+            <span className="font-mono text-[10px] font-bold text-indigo-300 uppercase">1. Plaintext Deposit</span>
+            <p className="mt-1 font-mono text-xs text-zinc-300">asset + amount + owner_sk</p>
+            <span className="mt-2 text-[10px] text-zinc-500">Inputs hashed via Pedersen</span>
+          </div>
+          <div className="flex flex-col items-center rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-3 text-center">
+            <span className="font-mono text-[10px] font-bold text-cyan-300 uppercase">2. Merkle Commitment</span>
+            <p className="mt-1 font-mono text-xs text-cyan-200">Leaf Index in 32-Depth Tree</p>
+            <span className="mt-2 text-[10px] text-zinc-500">Stored in encrypted local vault</span>
+          </div>
+          <div className="flex flex-col items-center rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3 text-center">
+            <span className="font-mono text-[10px] font-bold text-emerald-300 uppercase">3. Nullifier Spend</span>
+            <p className="mt-1 font-mono text-xs text-emerald-200">Unlinkable Exit Hash</p>
+            <span className="mt-2 text-[10px] text-zinc-500">Zero link to origin note</span>
+          </div>
+        </div>
+      </div>
+
       {/* Holdings List */}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="font-display text-base font-semibold tracking-tight text-zinc-100">Shielded Holdings</h2>
@@ -216,7 +249,10 @@ export function PortfolioPage() {
               >
                 <button
                   type="button"
-                  onClick={() => setOpen(isOpen ? null : b.asset)}
+                  onClick={() => {
+                    sfx.click()
+                    setOpen(isOpen ? null : b.asset)
+                  }}
                   aria-expanded={isOpen}
                   className="flex w-full items-center gap-4 p-4 text-left transition sm:p-5"
                 >

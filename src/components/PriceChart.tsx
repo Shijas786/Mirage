@@ -14,8 +14,9 @@ import {
 // preview is stable; when a live reference price is known the whole series is
 // rescaled so its last close sits on that price — the dark-pool testnet has no
 // historical feed of its own.
-const UP = '#d9c9a3'
-const DOWN = '#a06a52'
+// High-tech dark pool candlestick chart with cyber-cyan and neon-coral candles
+const UP = '#22D3EE'
+const DOWN = '#EF4444'
 
 function mockCandles(seed: string, anchor?: number, n = 90): CandlestickData[] {
   let s = 0
@@ -61,16 +62,16 @@ export function PriceChart({ pair, price }: { pair: string; price?: number | nul
       autoSize: true,
       layout: {
         background: { type: ColorType.Solid, color: 'transparent' },
-        textColor: '#8f8672',
+        textColor: '#94A3B8',
         fontFamily: "'JetBrains Mono', ui-monospace, SFMono-Regular, monospace",
         attributionLogo: false,
       },
       grid: {
-        vertLines: { color: 'rgba(239,233,220,0.04)' },
-        horzLines: { color: 'rgba(239,233,220,0.04)' },
+        vertLines: { color: 'rgba(255,255,255,0.03)' },
+        horzLines: { color: 'rgba(255,255,255,0.03)' },
       },
-      rightPriceScale: { borderColor: 'rgba(239,233,220,0.08)' },
-      timeScale: { borderColor: 'rgba(239,233,220,0.08)', timeVisible: true, secondsVisible: false },
+      rightPriceScale: { borderColor: 'rgba(255,255,255,0.08)' },
+      timeScale: { borderColor: 'rgba(255,255,255,0.08)', timeVisible: true, secondsVisible: false },
       crosshair: { mode: 0 },
     })
     chartRef.current = chart

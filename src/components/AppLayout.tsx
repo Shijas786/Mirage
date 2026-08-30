@@ -1,11 +1,14 @@
+import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useMirage } from '../hooks/useMirage'
 import { useReveal } from '../hooks/useReveal'
 import { clearAllNotes } from '../lib/note-store'
 import { formatUsd } from '../lib/format'
 import { cx } from '../lib/cx'
+import { sfx } from '../lib/sound'
 import { BrandCanvas } from './BrandCanvas'
 import { ConnectWallet } from './ConnectWallet'
+import { ZkCircuitInspector } from './ZkCircuitInspector'
 import {
   ArrowDownIcon,
   EyeGlyph,
@@ -15,6 +18,7 @@ import {
   SendIcon,
   SwapIcon,
   WalletIcon,
+  SparklesIcon,
 } from './ui'
 import { StarknetGlyph } from './BrandIcons'
 import { ScrambleNumber } from './ScrambleNumber'
@@ -34,7 +38,14 @@ const NAV: readonly NavItem[] = [
   { label: 'Receive', to: '/receive', shortLabel: 'Receive', icon: ReceiveIcon },
 ]
 
-function TopTelemetryBar() {
+function TopTelemetryBar({ onOpenInspector }: { onOpenInspector: () => void }) {
+  const [sfxActive, setSfxActive] = useState(() => sfx.isEnabled())
+
+  const toggleSfx = () => {
+    const next = sfx.toggle()
+    setSfxActive(next)
+  }
+
   return (
     <div className="relative z-50 border-b border-white/[0.06] bg-ink-950/90 px-4 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-mist-400/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between">
@@ -49,9 +60,28 @@ function TopTelemetryBar() {
           <span className="hidden text-zinc-600 sm:inline">|</span>
           <span className="hidden text-mist-300/80 sm:inline">Cairo 2.x Core</span>
           <span className="hidden text-zinc-600 md:inline">|</span>
-          <span className="hidden text-zinc-400 md:inline">Merkle Depth: 32</span>
+          <button
+            type="button"
+            onClick={() => {
+              sfx.click()
+              onOpenInspector()
+            }}
+            className="flex items-center gap-1 text-cyan-400 hover:text-cyan-300 hover:underline transition"
+          >
+            <SparklesIcon className="h-3 w-3" />
+            <span>[ Merkle Tree Inspector ]</span>
+          </button>
         </div>
         <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={toggleSfx}
+            className="text-mist-400 hover:text-mist-200 transition"
+            title="Toggle cybernetic synthesizer audio feedback"
+          >
+            {sfxActive ? '🔊 SFX: ON' : '🔇 SFX: OFF'}
+          </button>
+          <span className="text-zinc-600">|</span>
           <span className="text-cyan-400">Starknet Sepolia L2</span>
           <span className="text-zinc-600">|</span>
           <span className="rounded bg-mist-500/20 px-1 text-mist-200">0-Leakage</span>
@@ -224,10 +254,12 @@ function AppFooter() {
 
 /** Persistent app shell: the BrandCanvas world, router nav and Starknet cosmic footer */
 export function AppLayout() {
+  const [inspectorOpen, setInspectorOpen] = useState(false)
+
   return (
     <div className="relative flex min-h-screen flex-col bg-[#06070B]">
       <BrandCanvas />
-      <TopTelemetryBar />
+      <TopTelemetryBar onOpenInspector={() => setInspectorOpen(true)} />
       <AppNav />
       <main className="relative flex-1">
         <Outlet />
@@ -242,6 +274,7 @@ export function AppLayout() {
       />
       <AppFooter />
       <MobileNav />
+      <ZkCircuitInspector open={inspectorOpen} onClose={() => setInspectorOpen(false)} />
     </div>
   )
 }
