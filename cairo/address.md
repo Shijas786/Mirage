@@ -1,3 +1,3 @@
-contract class hash : 0x2a4482a13cb7f70dce6f7ba99c4ee6ce404379abeddd9b831b6bf24eb71e137
+contract class hash : 0x5a1b537e53e3e16ba580f84ba4fed19b435b508029272f570db06e46fbea6ff
 
-contract address (mainnet) : 0x78ae662e0cc6d1ab2cfeaf2a51ba8783d88e31886f88a794d142f95a6f8735b
+contract address (sepolia) : 0x2755446db5458a462efc92f44c0a6b4d31ae0f0127dee7ce2154ff4cfc871c2

@@ -1,7 +1,10 @@
 import type { STRK20_ACTION } from '@starknet-io/types-js';
 
-// Assume a swap helper is deployed at this address
-export const SWAP_HELPER_ADDRESS = "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
+// Sepolia testnet helper address
+export const SWAP_HELPER_ADDRESS =
+  import.meta.env?.VITE_SWAP_HELPER_ADDRESS ||
+  import.meta.env?.NEXT_PUBLIC_STRK20_ECHO_HELPER_SEPOLIA ||
+  "0x02755446db5458a462efc92f44c0a6b4d31ae0f0127dee7ce2154ff4cfc871c2";
 
 export async function submitIntent(
   account: any, // starknet.js WalletAccount / WalletAccountV6

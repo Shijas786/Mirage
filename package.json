@@ -9,7 +9,9 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "account:testnet": "node create-testnet-account.mjs",
+    "deploy:testnet": "node deploy-testnet.mjs"
   },
   "dependencies": {
     "@noble/ciphers": "^2.2.0",

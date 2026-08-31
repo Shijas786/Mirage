@@ -54,3 +54,5 @@ test-*.mjs
 replace.js
 skills-lock.json
 .agents/
+.starknet-account*
+.temp_account/
